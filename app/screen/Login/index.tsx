@@ -6,14 +6,27 @@ import styles from "./styles";
 import { useState } from "react";
 import Button from "@/app/component/Button";
 import { Ionicons } from "@expo/vector-icons";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { BlobShape } from "@/app/component/BlobShape";
+import { useAuth } from "@/app/context/AuthContext";
 const leafIcon = require("@/assets/image/leaf_drop_icon_teal.png")
 
 const LoginScreen = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isVisible, setIsVisible] = useState(false);
+  const { login, skipLogin } = useAuth();
+  const router = useRouter();
+
+  const handleLogin = async () => {
+    await login();
+    router.replace("/(tabs)/explore");
+  };
+
+  const handleSkip = async () => {
+    await skipLogin();
+    router.replace("/(tabs)/explore");
+  };
 
   return (
     <SafeAreaView style={SafeAreaViewStyles.SafeAreaView} >
@@ -62,7 +75,7 @@ const LoginScreen = () => {
             />
           </Pressable>
         </View>
-        <Button label="Đăng nhập" onPress={() => { }} />
+        <Button label="Đăng nhập" onPress={handleLogin} />
 
         <Link href="/" asChild>
           <Pressable style={{}}>
@@ -73,7 +86,12 @@ const LoginScreen = () => {
         </Link>
 
         <Link href="/" asChild>
-          <Pressable style={{}}>
+          <Pressable
+            style={{}}
+            onPress={() => {
+              router.push("/screen/register");
+            }}
+          >
             <Text style={styles.registerText}>
               Đăng ký
             </Text>
@@ -106,7 +124,7 @@ const LoginScreen = () => {
         </Pressable>
       </View>
       <View style={{ flex: 1.5 / 8, justifyContent: "flex-end", alignItems: "flex-end" }}>
-        <Button label="Bỏ qua" onPress={() => { }} />
+        <Button label="Bỏ qua" onPress={handleSkip} />
       </View>
     </SafeAreaView>
   );

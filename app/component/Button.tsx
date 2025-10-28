@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.medium,
     fontSize: FontSizes.medium,
     color: Colors.text_black,
+    lineHeight: 44,
   }
 })
 

@@ -16,15 +16,6 @@ export default function TabLayout() {
         headerShown: false,
         tabBarButton: HapticTab,
       }}>
-      <Tabs.Screen
-        name="Login"
-        options={{
-          title: "Login",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="person.fill" color={color} />
-          ),
-        }}
-      />
     </Tabs>
   );
 }
