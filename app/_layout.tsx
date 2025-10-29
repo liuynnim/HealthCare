@@ -22,13 +22,14 @@ function MainStack() {
 
   if (isLoading) return <LoadingScreen />;
 
-    return (
-      <Stack>
-        <Stack.Screen name="screen/login" options={{ headerShown: false }} />
-        <Stack.Screen name="screen/register" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
-    );
+  return (
+    <Stack>
+      <Stack.Screen name="screen/login/index" options={{ headerShown: false }} />
+      <Stack.Screen name="screen/register/index" options={{ headerShown: false }} />
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="screen/checkFace/index" options={{ headerShown: false }} />
+    </Stack>
+  );
 }
 
 export default function RootLayout() {

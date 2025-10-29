@@ -9,25 +9,39 @@ import { Ionicons } from "@expo/vector-icons";
 import { Link, useRouter } from "expo-router";
 import { BlobShape } from "@/app/component/BlobShape";
 import { useAuth } from "@/app/context/AuthContext";
+import { useForm, Controller } from "react-hook-form";
+import { LoginFormData, LoginSchema } from "@/app/schema/loginSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 const leafIcon = require("@/assets/image/leaf_drop_icon_teal.png")
 
 const LoginScreen = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const { login, skipLogin } = useAuth();
   const router = useRouter();
+
+  /* ********** Form Handle ********** */
+  const {
+    control,
+    handleSubmit,
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(LoginSchema),
+    mode: "onBlur",
+    defaultValues: {
+      username: '',
+      password: '',
+    }
+  });
 
   const handleLogin = async () => {
     await login();
     router.replace("/(tabs)/explore");
   };
+  /* ********************************* */
 
   const handleSkip = async () => {
     await skipLogin();
     router.replace("/(tabs)/explore");
   };
-
   return (
     <SafeAreaView style={SafeAreaViewStyles.SafeAreaView} >
       <View style={{ position: "absolute", width: "100%", height: "100%" }}>
@@ -45,23 +59,36 @@ const LoginScreen = () => {
       </View>
 
       <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Username"
-          placeholderTextColor="#7C7C7C"
-          value={username}
-          onChangeText={setUsername}
-          selectionColor={Colors.text_green}
+        <Controller
+          control={control}
+          name="username"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              style={styles.input}
+              placeholder="Username"
+              placeholderTextColor="#7C7C7C"
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+            />
+          )}
         />
         <View style={styles.passwordContainer}>
-          <TextInput
-            style={[styles.input, { paddingRight: 40, width: "100%" }]}
-            placeholder="Password"
-            placeholderTextColor="#7C7C7C"
-            secureTextEntry={!isVisible}
-            value={password}
-            onChangeText={setPassword}
-            selectionColor={Colors.text_green}
+          <Controller
+            control={control}
+            name="password"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                style={[styles.input, { paddingRight: 40, width: "100%" }]}
+                placeholder="Password"
+                placeholderTextColor="#7C7C7C"
+                secureTextEntry={!isVisible}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                selectionColor={Colors.text_green}
+              />
+            )}
           />
           <Pressable
             style={({ pressed }) => [styles.showPasswordBtn, { opacity: pressed ? 0.6 : 1, }]}
@@ -75,9 +102,9 @@ const LoginScreen = () => {
             />
           </Pressable>
         </View>
-        <Button label="Đăng nhập" onPress={handleLogin} />
+        <Button label="Đăng nhập" onPress={handleSubmit(handleLogin)} />
 
-        <Link href="/" asChild>
+        <Link href="/screen/register" asChild>
           <Pressable style={{}}>
             <Text style={styles.registerText}>
               Quên mật khẩu?
@@ -85,7 +112,7 @@ const LoginScreen = () => {
           </Pressable>
         </Link>
 
-        <Link href="/" asChild>
+        <Link href="/screen/register" asChild>
           <Pressable
             style={{}}
             onPress={() => {

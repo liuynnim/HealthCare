@@ -27,10 +27,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const loadAuthState = async () => {
       try {
-        const userToken = await AsyncStorage.getItem("token");
-        const guestMode = await AsyncStorage.getItem("guest");
-        if (userToken) setIsLoggedIn(true);
-        else if (guestMode === "true") setIsGuest(true);
+        // const userToken = await AsyncStorage.getItem("token");
+        // const guestMode = await AsyncStorage.getItem("guest");
+        // if (userToken) setIsLoggedIn(true);
+        // else if (guestMode === "true") setIsGuest(true);
       } finally {
         setIsLoading(false);
       }
