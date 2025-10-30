@@ -70,6 +70,7 @@ const LoginScreen = () => {
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
+              selectionColor={Colors.text_green}
             />
           )}
         />

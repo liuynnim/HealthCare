@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   /* ********** Header ********** */
   headerContainer: {
-    flex: 1.5 / 8,
+    flex: 1 / 8,
     justifyContent: "flex-end",
     alignItems: "center",
     marginBottom: 32
@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
     flex: 5 / 8,
     gap: 32,
     alignItems: "center",
+    maxHeight: 300, // Adjust this value as needed for your layout
   },
   input: {
     width: "60%",
