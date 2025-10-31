@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
-import { Colors } from "@/app/styles/Common";
+import { Colors } from "@/styles/Common";
 
 const LoadingScreen = ({ message = "Đang tải..." }: { message?: string }) => {
   return (

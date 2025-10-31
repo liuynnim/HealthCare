@@ -1,26 +1,38 @@
 import { StyleSheet } from "react-native";
-import { Colors, Fonts } from "@/app/styles/Common";
+import { Colors, Fonts, FontSizes } from "@/styles/Common";
 
 const styles = StyleSheet.create({
+  /* Header */
   headerContainer: {
     alignItems: "center",
     marginTop: 40,
     marginBottom: 40,
+  },
+  titleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
   },
   appTitle: {
     fontFamily: Fonts.bold,
     fontSize: 32,
     color: Colors.primary_2,
   },
-  subtitle: {
+  signature: {
     fontFamily: Fonts.regular,
-    fontSize: 14,
+    fontSize: 15,
     color: "#6B6B6B",
     marginTop: 4,
   },
+  leafIcon: {
+    width: 48,
+    height: 48,
+  },
+
+  /* Form container */
   scrollContainer: {
     alignItems: "center",
-    paddingBottom: 60,
+    paddingBottom: 40,
   },
   formCard: {
     width: "85%",
@@ -33,6 +45,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 6,
     elevation: 3,
+    rowGap: 24,
   },
   input: {
     backgroundColor: "#F2F7F6",
@@ -42,15 +55,6 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.regular,
     fontSize: 16,
     color: Colors.text_green,
-    marginBottom: 24,
-  },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    gap: 10,
-  },
-  halfInput: {
-    flex: 1,
   },
   passwordContainer: {
     position: "relative",
@@ -60,7 +64,9 @@ const styles = StyleSheet.create({
     right: 10,
     top: 14,
   },
-  submitButton: {
+
+  /* Buttons */
+  primaryButton: {
     backgroundColor: Colors.primary_2,
     borderRadius: 28,
     alignItems: "center",
@@ -68,10 +74,41 @@ const styles = StyleSheet.create({
     height: 56,
     marginTop: 8,
   },
-  submitText: {
+  primaryText: {
     color: "white",
     fontSize: 18,
     fontFamily: Fonts.medium,
+  },
+  linkText: {
+    fontFamily: Fonts.regular,
+    fontSize: FontSizes.medium,
+    color: Colors.text_green,
+    marginTop: 10,
+    textAlign: "center",
+  },
+  googleButton: {
+    marginTop: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "#E0E0E0",
+    borderRadius: 30,
+    paddingVertical: 10,
+    backgroundColor: "#FFF",
+    gap: 10,
+  },
+  googleText: {
+    color: "#333",
+    fontSize: 16,
+    fontFamily: Fonts.medium,
+  },
+
+  /* Skip */
+  skipContainer: {
+    alignItems: "flex-end",
+    paddingHorizontal: 24,
+    marginBottom: 40,
   },
 });
 

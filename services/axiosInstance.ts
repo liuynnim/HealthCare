@@ -28,7 +28,7 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
 
       if(data?.code === 401) {
         AsyncStorage.removeItem(STORAGE_KEY.ACCESS_TOKEN);
-        router.replace("/screen/login")
+        router.replace("/(screen)/Login")
       }
       if (data?.code === 400) {
         console.log(data.message || "Đã có lỗi xảy ra");
@@ -40,7 +40,7 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
 
       if (status === 401) {
         await AsyncStorage.removeItem(STORAGE_KEY.ACCESS_TOKEN);
-        router.replace("/screen/login");
+        router.replace("/(screen)/Login");
       }
 
       return Promise.reject(error);

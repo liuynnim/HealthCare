@@ -1,2 +1,2 @@
-import CheckFaceScreen from "../screen/checkFace";
+import CheckFaceScreen from "../(screen)/checkFace";
 export default CheckFaceScreen;

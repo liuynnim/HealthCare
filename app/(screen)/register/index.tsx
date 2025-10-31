@@ -1,11 +1,11 @@
-import { BlobShape } from "@/app/component/BlobShape";
-import { SafeAreaViewStyles } from "@/app/styles/Common";
+import { BlobShape } from "@/components/BlobShape";
+import { SafeAreaViewStyles } from "@/styles/Common";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { RegisterFromData, RegisterSchema } from "@/app/schema/RegisterSchema";
+import { RegisterFromData, RegisterSchema } from "@/schema/RegisterSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import styles from "./styles";
 

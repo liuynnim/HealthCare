@@ -1,5 +1,5 @@
-import { LoginSchema } from "@/schema/loginSchema";
 import { z } from "zod";
+import { LoginSchema } from "./loginSchema";
 
 export const RegisterSchema = LoginSchema.extend({
   f_name: z.string({ required_error: "Cho tôi biết tên của bạn" }),

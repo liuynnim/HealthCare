@@ -1,16 +1,16 @@
-import { Colors, SafeAreaViewStyles } from "@/app/styles/Common";
+import { Colors, SafeAreaViewStyles } from "@/styles/Common";
 import { Image } from "expo-image";
 import { Pressable, Text, TextInput, View, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "./styles";
 import { useState } from "react";
-import Button from "@/app/component/Button";
+import Button from "@/components/Button";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { BlobShape } from "@/app/component/BlobShape";
-import { useAuth } from "@/app/context/AuthContext";
+import { BlobShape } from "@/components/BlobShape";
+import { useAuth } from "@/context/AuthContext";
 import { useForm, Controller } from "react-hook-form";
-import { LoginFormData, LoginSchema } from "@/app/schema/loginSchema";
+import { LoginFormData, LoginSchema } from "@/schema/loginSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 const leafIcon = require("@/assets/image/leaf_drop_icon_teal.png");
 
@@ -116,7 +116,7 @@ const LoginScreen = () => {
             <Text style={styles.linkText}>Quên mật khẩu?</Text>
           </Pressable>
 
-          <Pressable onPress={() => router.push("/screen/register")}>
+          <Pressable onPress={() => router.push("/(screen)/register")}>
             <Text style={[styles.linkText, { textDecorationLine: "underline" }]}>Đăng ký tài khoản mới</Text>
           </Pressable>
 

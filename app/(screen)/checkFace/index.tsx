@@ -1,4 +1,4 @@
-import { SafeAreaViewStyles } from "@/app/styles/Common"
+import { SafeAreaViewStyles } from "@/styles/Common"
 import { SafeAreaView } from "react-native-safe-area-context"
 
 const CheckFaceScreen = () => {
