@@ -1,68 +1,78 @@
-import { Colors, Fonts, FontSizes } from "@/app/styles/Common";
 import { StyleSheet } from "react-native";
+import { Colors, Fonts } from "@/app/styles/Common";
 
 const styles = StyleSheet.create({
-  /* ********** Header ********** */
   headerContainer: {
-    flex: 1 / 8,
-    justifyContent: "flex-end",
     alignItems: "center",
-    marginBottom: 32
-  },
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 5
+    marginTop: 40,
+    marginBottom: 40,
   },
   appTitle: {
-    fontFamily: Fonts.regular,
-    fontSize: FontSizes.extraLarge,
+    fontFamily: Fonts.bold,
+    fontSize: 32,
     color: Colors.primary_2,
   },
-  /* **************************** */
-  /* ********** Form ********** */
-  inputContainer: {
-    flex: 5 / 8,
-    gap: 32,
+  subtitle: {
+    fontFamily: Fonts.regular,
+    fontSize: 14,
+    color: "#6B6B6B",
+    marginTop: 4,
+  },
+  scrollContainer: {
     alignItems: "center",
-    maxHeight: 300, // Adjust this value as needed for your layout
+    paddingBottom: 60,
+  },
+  formCard: {
+    width: "85%",
+    backgroundColor: "white",
+    borderRadius: 20,
+    paddingVertical: 30,
+    paddingHorizontal: 24,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 6,
+    elevation: 3,
   },
   input: {
-    width: "60%",
-    height: 56,
-    backgroundColor: "#E0EBE9",
+    backgroundColor: "#F2F7F6",
     borderRadius: 12,
+    height: 50,
     paddingHorizontal: 16,
     fontFamily: Fonts.regular,
     fontSize: 16,
     color: Colors.text_green,
-    marginBottom: 16,
+    marginBottom: 24,
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: 10,
+  },
+  halfInput: {
+    flex: 1,
   },
   passwordContainer: {
-    width: "60%",
-    height: 56,
     position: "relative",
   },
-  showPasswordBtn: {
+  eyeButton: {
     position: "absolute",
-    right: 0,
-    width: 40,
-    height: 56
+    right: 10,
+    top: 14,
   },
-  eyeIcon: {
-    lineHeight: 56,
-    textAlign: "center",
-  },
-  loginButton: {
-    width: "100%",
-    height: 56,
-    backgroundColor: "#4EC9B0",
+  submitButton: {
+    backgroundColor: Colors.primary_2,
     borderRadius: 28,
     alignItems: "center",
     justifyContent: "center",
+    height: 56,
     marginTop: 8,
   },
-  /* ************************** */
+  submitText: {
+    color: "white",
+    fontSize: 18,
+    fontFamily: Fonts.medium,
+  },
 });
 
 export default styles;

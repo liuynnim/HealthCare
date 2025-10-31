@@ -1,97 +1,114 @@
-import { Colors, Fonts, FontSizes } from "@/app/styles/Common";
 import { StyleSheet } from "react-native";
+import { Colors, Fonts, FontSizes } from "@/app/styles/Common";
 
 const styles = StyleSheet.create({
-  /* ********** Header ********** */
+  /* Header */
   headerContainer: {
-    flex: 1.5 / 8,
-    justifyContent: "flex-end",
     alignItems: "center",
-    marginBottom: 32
+    marginTop: 40,
+    marginBottom: 40,
   },
   titleContainer: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 5
+    gap: 8,
   },
   appTitle: {
-    fontFamily: Fonts.regular,
-    fontSize: FontSizes.extraLarge,
+    fontFamily: Fonts.bold,
+    fontSize: 32,
     color: Colors.primary_2,
   },
   signature: {
     fontFamily: Fonts.regular,
-    fontSize: FontSizes.large,
-    color: Colors.text_green,
+    fontSize: 15,
+    color: "#6B6B6B",
+    marginTop: 4,
   },
   leafIcon: {
-    width: 60,
-    height: 60,
+    width: 48,
+    height: 48,
   },
-  /* **************************** */
-  /* ********** Form ********** */
-  inputContainer: {
-    flex: 5 / 8,
-    gap: 32,
+
+  /* Form container */
+  scrollContainer: {
     alignItems: "center",
+    paddingBottom: 40,
+  },
+  formCard: {
+    width: "85%",
+    backgroundColor: "white",
+    borderRadius: 20,
+    paddingVertical: 30,
+    paddingHorizontal: 24,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 6,
+    elevation: 3,
+    rowGap: 24,
   },
   input: {
-    width: "60%",
-    height: 56,
-    backgroundColor: "#E0EBE9",
+    backgroundColor: "#F2F7F6",
     borderRadius: 12,
+    height: 50,
     paddingHorizontal: 16,
     fontFamily: Fonts.regular,
     fontSize: 16,
     color: Colors.text_green,
-    marginBottom: 16,
   },
   passwordContainer: {
-    width: "60%",
-    height: 56,
     position: "relative",
   },
-  showPasswordBtn: {
+  eyeButton: {
     position: "absolute",
-    right: 0,
-    width: 40,
-    height: 56
+    right: 10,
+    top: 14,
   },
-  eyeIcon: {
-    lineHeight: 56,
-    textAlign: "center",
-  },
-  loginButton: {
-    width: "100%",
-    height: 56,
-    backgroundColor: "#4EC9B0",
+
+  /* Buttons */
+  primaryButton: {
+    backgroundColor: Colors.primary_2,
     borderRadius: 28,
     alignItems: "center",
     justifyContent: "center",
+    height: 56,
     marginTop: 8,
   },
-  /* ************************** */
-  linkContainer: {
-    marginTop: 24,
-    alignItems: "center",
+  primaryText: {
+    color: "white",
+    fontSize: 18,
+    fontFamily: Fonts.medium,
   },
   linkText: {
     fontFamily: Fonts.regular,
-    fontSize: 16,
-    color: Colors.text_green,
-    marginVertical: 4,
-  },
-  registerBtn: {
-    height: 44,
-    width: 100,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 12
-  },
-  registerText: {
-    fontFamily: Fonts.medium,
-    textDecorationLine: "underline",
     fontSize: FontSizes.medium,
+    color: Colors.text_green,
+    marginTop: 10,
+    textAlign: "center",
+  },
+  googleButton: {
+    marginTop: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "#E0E0E0",
+    borderRadius: 30,
+    paddingVertical: 10,
+    backgroundColor: "#FFF",
+    gap: 10,
+  },
+  googleText: {
+    color: "#333",
+    fontSize: 16,
+    fontFamily: Fonts.medium,
+  },
+
+  /* Skip */
+  skipContainer: {
+    alignItems: "flex-end",
+    paddingHorizontal: 24,
+    marginBottom: 40,
   },
 });
 
