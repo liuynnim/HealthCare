@@ -5,8 +5,8 @@ import { useFonts } from "expo-font";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import { AuthProvider, useAuth } from "../context/AuthContext";
-import LoadingScreen from "./component/Loading";
+import { AuthProvider, useAuth } from "@/context/AuthContext";
+import LoadingScreen from "@/components/Loading";
 
 const queryClient = new QueryClient();
 
@@ -17,17 +17,17 @@ function MainStack() {
   useEffect(() => {
     if (isLoading) return;
     if (isLoggedIn || isGuest) router.replace("/(tabs)/explore");
-    else router.replace("/screen/login");
+    else router.replace("/(screen)/login");
   }, [isLoading, isLoggedIn, isGuest]);
 
   if (isLoading) return <LoadingScreen />;
 
   return (
     <Stack>
-      <Stack.Screen name="screen/login/index" options={{ headerShown: false }} />
-      <Stack.Screen name="screen/register/index" options={{ headerShown: false }} />
+      <Stack.Screen name="(screen)/login/index" options={{ headerShown: false }} />
+      <Stack.Screen name="(screen)/register/index" options={{ headerShown: false }} />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="screen/checkFace/index" options={{ headerShown: false }} />
+      <Stack.Screen name="(screen)/checkFace/index" options={{ headerShown: false }} />
     </Stack>
   );
 }
