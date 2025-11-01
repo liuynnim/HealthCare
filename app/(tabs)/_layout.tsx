@@ -1,20 +1,32 @@
-import { Tabs } from 'expo-router';
 import React from 'react';
-
-import { HapticTab } from '@/components/haptic-tab';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { Drawer } from 'expo-router/drawer';
+import Header from '../../components/Header';
+import { Image } from 'expo-image';
+const iconChandoan = require("@/assets/image/chandoan.png")
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
 
   return (
-    <Tabs
+    <Drawer
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-      }}>
-    </Tabs>
+        headerShown: true,
+        header: () => <Header />,
+        swipeEnabled: true,
+        drawerStyle: {
+          backgroundColor: '#ffffff',
+          width: 300,
+        },
+      }}
+    >
+      <Drawer.Screen
+        name="explore"
+        options={{
+          title: 'Chẩn đoán bệnh',
+          drawerIcon: () => (
+            <Image source={iconChandoan} style={{ width: 35, height: 35 }} />
+          ),
+        }}
+      />
+    </Drawer>
   );
 }

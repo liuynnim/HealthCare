@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { Colors, Fonts } from "@/styles/Common";
+import { Colors, Fonts, FontSizes } from "@/styles/Common";
 
 const styles = StyleSheet.create({
   headerContainer: {
@@ -9,12 +9,12 @@ const styles = StyleSheet.create({
   },
   appTitle: {
     fontFamily: Fonts.bold,
-    fontSize: 32,
+    fontSize: FontSizes.extraLarge,
     color: Colors.primary_2,
   },
   subtitle: {
     fontFamily: Fonts.regular,
-    fontSize: 14,
+    fontSize: FontSizes.large,
     color: "#6B6B6B",
     marginTop: 4,
   },

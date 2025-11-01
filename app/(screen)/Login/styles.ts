@@ -15,12 +15,12 @@ const styles = StyleSheet.create({
   },
   appTitle: {
     fontFamily: Fonts.bold,
-    fontSize: 32,
+    fontSize: FontSizes.extraLarge,
     color: Colors.primary_2,
   },
   signature: {
     fontFamily: Fonts.regular,
-    fontSize: 15,
+    fontSize: FontSizes.large,
     color: "#6B6B6B",
     marginTop: 4,
   },
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     height: 50,
     paddingHorizontal: 16,
     fontFamily: Fonts.regular,
-    fontSize: 16,
+    fontSize: FontSizes.medium,
     color: Colors.text_green,
   },
   passwordContainer: {
