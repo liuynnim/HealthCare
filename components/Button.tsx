@@ -17,7 +17,7 @@ const Button = ({
 }: Props) => {
   return theme ? (
     <LinearGradient
-      colors={['#10B981CC', '#14B8A6CC', '#4ADE80CC']}
+      colors={['#fae900CC', '#14B8A6CC', '#4ADE80CC']}
       locations={[0, 0.5, 1]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 0 }}

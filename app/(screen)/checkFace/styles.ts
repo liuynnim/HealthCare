@@ -1,4 +1,4 @@
-import { Colors } from "@/styles/Common";
+import { Colors, Fonts, FontSizes } from "@/styles/Common";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
@@ -31,7 +31,7 @@ export const styles = StyleSheet.create({
   },
   icon: {
     width: 100,
-    height:100,
+    height: 100,
     tintColor: Colors.primary,
   },
   uploadText: {
@@ -45,6 +45,33 @@ export const styles = StyleSheet.create({
     height: "100%",
     borderRadius: 12,
     resizeMode: "cover",
+  },
+  /** Phần kết quả **/
+  resultWrapper: {
+    flex: 1,
+    padding: 20,
+    gap: 56,
+    alignItems: "center"
+  },
+  resultTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#14B8A6",
+  },
+  resultBox: {
+    marginTop: -30,
+    flex: 1,
+    maxHeight: 450,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 12,
+    backgroundColor: "#fff",
+  },
+  resultText: {
+    fontFamily: Fonts.medium,
+    fontSize: FontSizes.medium,
+    lineHeight: 22,
+    color: "#333",
   },
 });
 
