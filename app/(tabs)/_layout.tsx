@@ -1,7 +1,7 @@
-import React from 'react';
-import { Drawer } from 'expo-router/drawer';
-import Header from '../../components/Header';
 import { Image } from 'expo-image';
+import { Drawer } from 'expo-router/drawer';
+import React from 'react';
+import Header from '../../components/Header';
 const iconChandoan = require("@/assets/image/chandoan.png")
 
 export default function TabLayout() {
@@ -19,7 +19,7 @@ export default function TabLayout() {
       }}
     >
       <Drawer.Screen
-        name="explore"
+        name="checkFace"
         options={{
           title: 'Chẩn đoán bệnh',
           drawerIcon: () => (

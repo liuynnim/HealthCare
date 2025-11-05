@@ -1,17 +1,17 @@
+import { BlobShape } from "@/components/BlobShape";
+import Button from "@/components/Button";
+import { useAuth } from "@/context/AuthContext";
+import { LoginFormData, LoginSchema } from "@/schema/loginSchema";
 import { Colors, SafeAreaViewStyles } from "@/styles/Common";
+import { Ionicons } from "@expo/vector-icons";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Image } from "expo-image";
-import { Pressable, Text, TextInput, View, ScrollView } from "react-native";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "./styles";
-import { useState } from "react";
-import Button from "@/components/Button";
-import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import { BlobShape } from "@/components/BlobShape";
-import { useAuth } from "@/context/AuthContext";
-import { useForm, Controller } from "react-hook-form";
-import { LoginFormData, LoginSchema } from "@/schema/loginSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
 const leafIcon = require("@/assets/image/leaf_drop_icon_teal.png");
 
 const LoginScreen = () => {
@@ -33,12 +33,10 @@ const LoginScreen = () => {
 
   const handleLogin = async () => {
     await login();
-    router.replace("/(tabs)/explore");
   };
 
   const handleSkip = async () => {
     await skipLogin();
-    router.replace("/(tabs)/explore");
   };
 
   return (

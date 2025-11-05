@@ -16,7 +16,7 @@ function MainStack() {
 
   useEffect(() => {
     if (isLoading) return;
-    if (isLoggedIn || isGuest) router.replace("/(tabs)/explore");
+    if (isLoggedIn || isGuest) router.replace("/(tabs)/checkFace");
     else router.replace("/(screen)/login");
   }, [isLoading, isLoggedIn, isGuest]);
 

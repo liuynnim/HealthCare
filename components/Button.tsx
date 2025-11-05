@@ -1,3 +1,4 @@
+import { LinearGradient } from "expo-linear-gradient";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Colors, Fonts, FontSizes } from "../styles/Common";
 
@@ -5,16 +6,48 @@ type Props = {
   label: string;
   theme?: 'primary';
   onPress?: () => void;
+  disabled?: boolean;
 }
 
 const Button = ({
   label,
   theme,
-  onPress
+  onPress,
+  disabled = false
 }: Props) => {
-  return (
+  return theme ? (
+    <LinearGradient
+      colors={['#10B981CC', '#14B8A6CC', '#4ADE80CC']}
+      locations={[0, 0.5, 1]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 0 }}
+      style={styles.btnContainer}
+    >
+      <Pressable
+        style={[
+          styles.btn,
+          {
+            backgroundColor: disabled ? "#e0e0e0" : Colors.primary
+          }
+        ]}
+        onPress={onPress}
+        disabled={disabled}
+      >
+        <Text style={[styles.btnLabel, {color: "#FFF"}]}>{label}</Text>
+      </Pressable>
+    </LinearGradient>
+  ) : (
     <View style={styles.btnContainer}>
-      <Pressable style={styles.btn} onPress={onPress}>
+      <Pressable
+        style={[
+          styles.btn,
+          {
+            backgroundColor: disabled ? "#e0e0e0" : Colors.primary
+          }
+        ]}
+        onPress={onPress}
+        disabled={disabled}
+      >
         <Text style={styles.btnLabel}>{label}</Text>
       </Pressable>
     </View>
@@ -35,14 +68,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     flexDirection: 'row',
-    backgroundColor: Colors.primary,
   },
   btnLabel: {
     fontFamily: Fonts.medium,
     fontSize: FontSizes.medium,
     color: Colors.text_black,
     lineHeight: 44,
-  }
+  },
 })
 
 export default Button;
