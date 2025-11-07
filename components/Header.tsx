@@ -16,13 +16,17 @@ const Header = () => {
   return (
     <View style={[styles.headerContainer, { paddingTop: insets.top }]}>
       <Pressable onPress={openDrawer} style={styles.button}>
-        <Ionicons name="menu" size={28} color={Colors.text_green} />
+        <Ionicons name="menu" size={28} color={Colors.primary} />
       </Pressable>
 
       <Text style={styles.headerTitle}>Health Care</Text>
 
       <Pressable style={styles.button}>
-        <Ionicons name="person-circle-outline" size={28} color={Colors.text_green} />
+        <Ionicons
+          name="person-circle-outline"
+          size={28}
+          color={Colors.primary}
+        />
       </Pressable>
     </View>
   );
@@ -40,7 +44,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 22,
     fontWeight: "bold",
-    color: Colors.text_green,
+    color: Colors.primary,
   },
   button: {
     padding: 8,

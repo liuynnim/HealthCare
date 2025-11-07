@@ -5,8 +5,8 @@ import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
-import { styles } from "./styles";
-const iconChandoan = require("@/assets/image/chandoan.png")
+import styles from "./styles";
+const iconChandoan = require("@/assets/image/chandoan.png");
 
 const mockResultData = {
   summary: "Khuôn mặt có dấu hiệu mệt mỏi nhẹ, vùng da dưới mắt hơi sạm.",
@@ -40,15 +40,15 @@ const CheckFaceScreen = () => {
 
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
+      mediaTypes: ["images"],
       quality: 1,
-    })
+    });
     if (!result.canceled) {
       setSelectedImage(result.assets[0].uri);
     } else {
       alert("You did not select any image.");
     }
-  }
+  };
 
   const handleDiagnose = () => {
     if (!selectedImage) return;
@@ -59,11 +59,15 @@ const CheckFaceScreen = () => {
     <View style={SafeAreaViewStyles.SafeAreaView}>
       <SubHeader source={iconChandoan} title={"Chẩn đoán sức khỏe"} />
 
-      {!data ?
+      {!data ? (
         <View style={styles.container}>
           <Pressable style={styles.uploadBox} onPress={pickImageAsync}>
             {selectedImage ? (
-              <Image source={{ uri: selectedImage }} style={styles.preview} contentFit="contain" />
+              <Image
+                source={{ uri: selectedImage }}
+                style={styles.preview}
+                contentFit="contain"
+              />
             ) : (
               <View style={styles.iconWrapper}>
                 <Image
@@ -76,46 +80,68 @@ const CheckFaceScreen = () => {
               </View>
             )}
           </Pressable>
-          <Button label="Chẩn đoán" theme="primary" onPress={handleDiagnose} disabled={!selectedImage} />
-        </View> :
-        (
-          <View style={styles.resultWrapper}>
-            <Text style={styles.resultTitle}>Kết quả chẩn đoán</Text>
+          <Button
+            label="Chẩn đoán"
+            theme="primary"
+            onPress={handleDiagnose}
+            disabled={!selectedImage}
+          />
+        </View>
+      ) : (
+        <View style={styles.resultWrapper}>
+          <Text style={styles.resultTitle}>Kết quả chẩn đoán</Text>
 
-            {/* Khung có thể cuộn nếu nội dung dài */}
-            <ScrollView
-              style={styles.resultBox}
-              contentContainerStyle={{ padding: 12 }}
-              showsVerticalScrollIndicator
-            >
-              <Text style={styles.resultText}>{mockResultData.summary}</Text>
+          {/* Khung có thể cuộn nếu nội dung dài */}
+          <ScrollView
+            style={styles.resultBox}
+            contentContainerStyle={{ padding: 12 }}
+            showsVerticalScrollIndicator
+          >
+            <Text style={styles.resultText}>{mockResultData.summary}</Text>
 
-              {mockResultData.diagnosis.map((item, index) => (
-                <View key={index} style={{ marginTop: 12 }}>
-                  <Text style={[styles.resultText, { fontWeight: "600", color: "#14B8A6" }]}>
-                    {item.title}
-                  </Text>
-                  <Text style={styles.resultText}>{item.detail}</Text>
-                </View>
-              ))}
-
-              <View style={{ marginTop: 16, paddingTop: 8, borderTopWidth: 1, borderColor: "#eee" }}>
-                <Text style={[styles.resultText, { fontStyle: "italic", color: "#0F766E" }]}>
-                  👉 {mockResultData.recommendation}
+            {mockResultData.diagnosis.map((item, index) => (
+              <View key={index} style={{ marginTop: 12 }}>
+                <Text
+                  style={[
+                    styles.resultText,
+                    { fontWeight: "600", color: "#14B8A6" },
+                  ]}
+                >
+                  {item.title}
                 </Text>
+                <Text style={styles.resultText}>{item.detail}</Text>
               </View>
-            </ScrollView>
+            ))}
 
-            <Button
-              label="Thử lại"
-              theme="primary"
-              onPress={() => {
-                setData(null);
-                setSelectedImage(null);
+            <View
+              style={{
+                marginTop: 16,
+                paddingTop: 8,
+                borderTopWidth: 1,
+                borderColor: "#eee",
               }}
-            />
-          </View>
-        )}
+            >
+              <Text
+                style={[
+                  styles.resultText,
+                  { fontStyle: "italic", color: "#0F766E" },
+                ]}
+              >
+                👉 {mockResultData.recommendation}
+              </Text>
+            </View>
+          </ScrollView>
+
+          <Button
+            label="Thử lại"
+            theme="primary"
+            onPress={() => {
+              setData(null);
+              setSelectedImage(null);
+            }}
+          />
+        </View>
+      )}
     </View>
   );
 };

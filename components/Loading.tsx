@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   text: {
     marginTop: 16,
     fontSize: 16,
-    color: Colors.text_black,
+    color: Colors.primary,
     fontFamily: "Roboto-Condensed-Medium",
   },
 });

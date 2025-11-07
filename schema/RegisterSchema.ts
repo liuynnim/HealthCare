@@ -2,9 +2,9 @@ import { z } from "zod";
 import { LoginSchema } from "./loginSchema";
 
 export const RegisterSchema = LoginSchema.extend({
-  f_name: z.string({ required_error: "Cho tôi biết tên của bạn" }),
-  l_name: z.string({ required_error: "Cho tôi biết tên của bạn" }),
+  name: z.string({ required_error: "Cho tôi biết tên của bạn" }),
   email: z.string().email("Hãy điền email của bạn"),
+  dateOfBirth: z.string().min(1,"Hãy nhập ngày sinh"),
   checkPassword: z.string()
 }).refine(
   (data) => data.password === data.checkPassword,

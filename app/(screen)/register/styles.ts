@@ -1,5 +1,5 @@
-import { StyleSheet } from "react-native";
 import { Colors, Fonts, FontSizes } from "@/styles/Common";
+import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   headerContainer: {
@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
   appTitle: {
     fontFamily: Fonts.bold,
     fontSize: FontSizes.extraLarge,
-    color: Colors.primary_2,
+    color: Colors.primary,
   },
   subtitle: {
     fontFamily: Fonts.regular,
@@ -24,33 +24,25 @@ const styles = StyleSheet.create({
   },
   formCard: {
     width: "85%",
-    backgroundColor: "white",
+    backgroundColor: Colors.card,
     borderRadius: 20,
     paddingVertical: 30,
     paddingHorizontal: 24,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 6,
-    elevation: 3,
+    shadowColor: "#fff",
+    shadowOpacity: 0.3,
+    shadowOffset: { width: 0, height: 3 },
+    shadowRadius: 8,
+    elevation: 5,
+    rowGap: 24,
   },
   input: {
-    backgroundColor: "#F2F7F6",
+    backgroundColor: "#262626",
     borderRadius: 12,
     height: 50,
     paddingHorizontal: 16,
     fontFamily: Fonts.regular,
-    fontSize: 16,
-    color: Colors.text_green,
-    marginBottom: 24,
-  },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    gap: 10,
-  },
-  halfInput: {
-    flex: 1,
+    fontSize: FontSizes.medium,
+    color: Colors.text_primary,
   },
   passwordContainer: {
     position: "relative",
@@ -61,16 +53,16 @@ const styles = StyleSheet.create({
     top: 14,
   },
   submitButton: {
-    backgroundColor: Colors.primary_2,
+    backgroundColor: Colors.primary,
     borderRadius: 28,
     alignItems: "center",
     justifyContent: "center",
     height: 56,
     marginTop: 8,
   },
-  submitText: {
-    color: "white",
-    fontSize: 18,
+  primaryText: {
+    color: "black",
+    fontSize: FontSizes.medium,
     fontFamily: Fonts.medium,
   },
 });

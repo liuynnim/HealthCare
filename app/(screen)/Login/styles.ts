@@ -1,5 +1,5 @@
-import { StyleSheet } from "react-native";
 import { Colors, Fonts, FontSizes } from "@/styles/Common";
+import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   /* Header */
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   appTitle: {
     fontFamily: Fonts.bold,
     fontSize: FontSizes.extraLarge,
-    color: Colors.primary_2,
+    color: Colors.primary,
   },
   signature: {
     fontFamily: Fonts.regular,
@@ -34,28 +34,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingBottom: 40,
   },
-  formCard: {
-    width: "85%",
-    backgroundColor: "white",
-    borderRadius: 20,
-    paddingVertical: 30,
-    paddingHorizontal: 24,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 6,
-    elevation: 3,
-    rowGap: 24,
-  },
-  input: {
-    backgroundColor: "#F2F7F6",
-    borderRadius: 12,
-    height: 50,
-    paddingHorizontal: 16,
-    fontFamily: Fonts.regular,
-    fontSize: FontSizes.medium,
-    color: Colors.text_green,
-  },
   passwordContainer: {
     position: "relative",
   },
@@ -65,9 +43,36 @@ const styles = StyleSheet.create({
     top: 14,
   },
 
-  /* Buttons */
+  /* Skip */
+  skipContainer: {
+    alignItems: "flex-end",
+    paddingHorizontal: 24,
+    marginBottom: 40,
+  },
+  formCard: {
+    width: "85%",
+    backgroundColor: Colors.card,
+    borderRadius: 20,
+    paddingVertical: 30,
+    paddingHorizontal: 24,
+    shadowColor: "#fff",
+    shadowOpacity: 0.3,
+    shadowOffset: { width: 0, height: 3 },
+    shadowRadius: 8,
+    elevation: 5,
+    rowGap: 24,
+  },
+  input: {
+    backgroundColor: "#262626",
+    borderRadius: 12,
+    height: 50,
+    paddingHorizontal: 16,
+    fontFamily: Fonts.regular,
+    fontSize: FontSizes.medium,
+    color: Colors.text_primary,
+  },
   primaryButton: {
-    backgroundColor: Colors.primary_2,
+    backgroundColor: Colors.primary,
     borderRadius: 28,
     alignItems: "center",
     justifyContent: "center",
@@ -75,14 +80,14 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   primaryText: {
-    color: "white",
+    color: "black",
     fontSize: 18,
     fontFamily: Fonts.medium,
   },
   linkText: {
     fontFamily: Fonts.regular,
     fontSize: FontSizes.medium,
-    color: Colors.text_green,
+    color: Colors.primary,
     marginTop: 10,
     textAlign: "center",
   },
@@ -92,23 +97,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
-    borderColor: "#E0E0E0",
+    borderColor: Colors.border,
     borderRadius: 30,
     paddingVertical: 10,
-    backgroundColor: "#FFF",
+    backgroundColor: "#fff",
     gap: 10,
   },
   googleText: {
-    color: "#333",
+    color: "#000",
     fontSize: 16,
     fontFamily: Fonts.medium,
-  },
-
-  /* Skip */
-  skipContainer: {
-    alignItems: "flex-end",
-    paddingHorizontal: 24,
-    marginBottom: 40,
   },
 });
 

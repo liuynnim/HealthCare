@@ -1,32 +1,29 @@
 import { BlobShape } from "@/components/BlobShape";
-import { SafeAreaViewStyles } from "@/styles/Common";
+import DatePickerModal from "@/components/DatePickerModal";
+import { RegisterFromData, RegisterSchema } from "@/schema/RegisterSchema";
+import { Colors, SafeAreaViewStyles } from "@/styles/Common";
 import { Ionicons } from "@expo/vector-icons";
-import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { RegisterFromData, RegisterSchema } from "@/schema/RegisterSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "./styles";
 
 const Register = () => {
   const [isVisiblePassword, setIsVisiblePassword] = useState(false);
   const [isVisibleCheckPassword, setIsVisibleCheckPassword] = useState(false);
 
-  const {
-    control,
-    handleSubmit,
-  } = useForm<RegisterFromData>({
+  const { control, handleSubmit } = useForm<RegisterFromData>({
     resolver: zodResolver(RegisterSchema),
     mode: "onBlur",
     defaultValues: {
-      username: '',
-      password: '',
-      email: '',
-      f_name: '',
-      l_name: '',
-      checkPassword: ''
-    }
+      username: "",
+      password: "",
+      email: "",
+      name: "",
+      checkPassword: "",
+    },
   });
 
   const onSubmit = (data: RegisterFromData) => {
@@ -34,18 +31,52 @@ const Register = () => {
   };
 
   return (
-    <SafeAreaView style={[SafeAreaViewStyles.SafeAreaView, { backgroundColor: "#F4FAF9" }]}>
+    <SafeAreaView
+      style={[
+        SafeAreaViewStyles.SafeAreaView,
+        { backgroundColor: Colors.background },
+      ]}
+    >
       {/* Decorative blobs */}
       <View style={{ position: "absolute", width: "100%", height: "100%" }}>
-        <BlobShape height={350} width={200} rotate="25deg" rx={80} ry={80} top={-40} right={280} opacity={0.25} />
-        <BlobShape height={400} width={200} rotate="70deg" rx={80} ry={120} top={520} right={300} opacity={0.25} />
-        <BlobShape height={400} width={200} rotate="0deg" rx={80} ry={120} top={190} right={-30} opacity={0.25} />
+        <BlobShape
+          height={350}
+          width={200}
+          rotate="25deg"
+          rx={80}
+          ry={80}
+          top={-40}
+          right={280}
+          opacity={0.25}
+        />
+        <BlobShape
+          height={400}
+          width={200}
+          rotate="70deg"
+          rx={80}
+          ry={120}
+          top={520}
+          right={300}
+          opacity={0.25}
+        />
+        <BlobShape
+          height={400}
+          width={200}
+          rotate="0deg"
+          rx={80}
+          ry={120}
+          top={190}
+          right={-30}
+          opacity={0.25}
+        />
       </View>
 
       {/* Header */}
       <View style={styles.headerContainer}>
         <Text style={styles.appTitle}>HealthCare</Text>
-        <Text style={styles.subtitle}>Chăm sóc sức khỏe - Dễ dàng & Tin cậy</Text>
+        <Text style={styles.subtitle}>
+          Chăm sóc sức khỏe - Dễ dàng & Tin cậy
+        </Text>
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -66,39 +97,29 @@ const Register = () => {
             )}
           />
 
-          {/* Họ + Tên */}
-          <View style={styles.row}>
-            <Controller
-              control={control}
-              name="f_name"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  style={[styles.input, styles.halfInput]}
-                  placeholder="Họ"
-                  placeholderTextColor="#8E8E8E"
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                />
-              )}
-            />
-            <Controller
-              control={control}
-              name="l_name"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  style={[styles.input, styles.halfInput]}
-                  placeholder="Tên"
-                  placeholderTextColor="#8E8E8E"
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                />
-              )}
-            />
-          </View>
+          <Controller
+            control={control}
+            name="name"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                style={[styles.input]}
+                placeholder="Tên"
+                placeholderTextColor="#8E8E8E"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+          />
 
-          {/* Tên đăng nhập */}
+          <Controller
+            control={control}
+            name="dateOfBirth"
+            render={({ field: { onChange, value } }) => (
+              <DatePickerModal value={value} onChange={onChange} />
+            )}
+          />
+
           <Controller
             control={control}
             name="username"
@@ -114,7 +135,6 @@ const Register = () => {
             )}
           />
 
-          {/* Mật khẩu */}
           <View style={styles.passwordContainer}>
             <Controller
               control={control}
@@ -143,7 +163,6 @@ const Register = () => {
             </Pressable>
           </View>
 
-          {/* Nhập lại mật khẩu */}
           <View style={styles.passwordContainer}>
             <Controller
               control={control}
@@ -165,7 +184,9 @@ const Register = () => {
               onPress={() => setIsVisibleCheckPassword(!isVisibleCheckPassword)}
             >
               <Ionicons
-                name={isVisibleCheckPassword ? "eye-outline" : "eye-off-outline"}
+                name={
+                  isVisibleCheckPassword ? "eye-outline" : "eye-off-outline"
+                }
                 size={22}
                 color="#7C7C7C"
               />
@@ -173,8 +194,11 @@ const Register = () => {
           </View>
 
           {/* Button */}
-          <Pressable style={styles.submitButton} onPress={handleSubmit(onSubmit)}>
-            <Text style={styles.submitText}>Đăng ký</Text>
+          <Pressable
+            style={styles.submitButton}
+            onPress={handleSubmit(onSubmit)}
+          >
+            <Text style={styles.primaryText}>Đăng ký</Text>
           </Pressable>
         </View>
       </ScrollView>

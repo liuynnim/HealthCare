@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios, { AxiosError, AxiosInstance } from "axios";
-import { STORAGE_KEY } from "../constants/common";
 import { router } from "expo-router";
+import { STORAGE_KEY } from "../constants/common";
 
 const createAxiosInstance = (baseURL: string): AxiosInstance => {
   const instance = axios.create({
@@ -28,7 +28,7 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
 
       if(data?.code === 401) {
         AsyncStorage.removeItem(STORAGE_KEY.ACCESS_TOKEN);
-        router.replace("/(screen)/Login")
+        router.replace("/(screen)/login")
       }
       if (data?.code === 400) {
         console.log(data.message || "Đã có lỗi xảy ra");
@@ -40,7 +40,7 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
 
       if (status === 401) {
         await AsyncStorage.removeItem(STORAGE_KEY.ACCESS_TOKEN);
-        router.replace("/(screen)/Login");
+        router.replace("/(screen)/login");
       }
 
       return Promise.reject(error);

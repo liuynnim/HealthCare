@@ -12,23 +12,19 @@ import { Controller, useForm } from "react-hook-form";
 import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "./styles";
-const leafIcon = require("@/assets/image/leaf_drop_icon_teal.png");
 
 const LoginScreen = () => {
   const [isVisible, setIsVisible] = useState(false);
   const { login, skipLogin } = useAuth();
   const router = useRouter();
 
-  const {
-    control,
-    handleSubmit,
-  } = useForm<LoginFormData>({
+  const { control, handleSubmit } = useForm<LoginFormData>({
     resolver: zodResolver(LoginSchema),
     mode: "onBlur",
     defaultValues: {
-      username: '',
-      password: '',
-    }
+      username: "",
+      password: "",
+    },
   });
 
   const handleLogin = async () => {
@@ -40,19 +36,50 @@ const LoginScreen = () => {
   };
 
   return (
-    <SafeAreaView style={[SafeAreaViewStyles.SafeAreaView, { backgroundColor: "#F4FAF9" }]}>
+    <SafeAreaView
+      style={[
+        SafeAreaViewStyles.SafeAreaView,
+        { backgroundColor: Colors.background },
+      ]}
+    >
       {/* ---- Blob background ---- */}
       <View style={{ position: "absolute", width: "100%", height: "100%" }}>
-        <BlobShape height={350} width={200} rotate="25deg" rx={80} ry={80} top={0} right={300} opacity={0.25} />
-        <BlobShape height={400} width={200} rotate="70deg" rx={80} ry={120} top={500} right={300} opacity={0.25} />
-        <BlobShape height={400} width={200} rotate="0deg" rx={80} ry={120} top={190} right={-30} opacity={0.25} />
+        <BlobShape
+          height={350}
+          width={200}
+          rotate="25deg"
+          rx={80}
+          ry={80}
+          top={0}
+          right={300}
+          opacity={0.25}
+        />
+        <BlobShape
+          height={400}
+          width={200}
+          rotate="70deg"
+          rx={80}
+          ry={120}
+          top={500}
+          right={300}
+          opacity={0.25}
+        />
+        <BlobShape
+          height={400}
+          width={200}
+          rotate="0deg"
+          rx={80}
+          ry={120}
+          top={190}
+          right={-30}
+          opacity={0.25}
+        />
       </View>
 
       {/* ---- Header ---- */}
       <View style={styles.headerContainer}>
         <View style={styles.titleContainer}>
           <Text style={styles.appTitle}>HealthCare</Text>
-          <Image source={leafIcon} style={styles.leafIcon} />
         </View>
         <Text style={styles.signature}>Hãy bảo vệ sức khỏe của chính mình</Text>
       </View>
@@ -71,7 +98,7 @@ const LoginScreen = () => {
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
-                selectionColor={Colors.text_green}
+                selectionColor={Colors.text_primary}
               />
             )}
           />
@@ -89,7 +116,7 @@ const LoginScreen = () => {
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
-                  selectionColor={Colors.text_green}
+                  selectionColor={Colors.text_primary}
                 />
               )}
             />
@@ -106,22 +133,31 @@ const LoginScreen = () => {
           </View>
 
           {/* ---- Buttons ---- */}
-          <Pressable style={styles.primaryButton} onPress={handleSubmit(handleLogin)}>
+          <Pressable
+            style={styles.primaryButton}
+            onPress={handleSubmit(handleLogin)}
+          >
             <Text style={styles.primaryText}>Đăng nhập</Text>
           </Pressable>
 
-          <Pressable onPress={() => { }}>
+          <Pressable onPress={() => {}}>
             <Text style={styles.linkText}>Quên mật khẩu?</Text>
           </Pressable>
 
           <Pressable onPress={() => router.push("/(screen)/register")}>
-            <Text style={[styles.linkText, { textDecorationLine: "underline" }]}>Đăng ký tài khoản mới</Text>
+            <Text
+              style={[styles.linkText, { textDecorationLine: "underline" }]}
+            >
+              Đăng ký tài khoản mới
+            </Text>
           </Pressable>
 
           {/* ---- Social Login ---- */}
           <Pressable style={styles.googleButton}>
             <Image
-              source={{ uri: "https://developers.google.com/identity/images/g-logo.png" }}
+              source={{
+                uri: "https://developers.google.com/identity/images/g-logo.png",
+              }}
               style={{ width: 28, height: 28 }}
             />
             <Text style={styles.googleText}>Đăng nhập với Google</Text>

@@ -4,20 +4,15 @@ import { Colors, Fonts, FontSizes } from "../styles/Common";
 
 type Props = {
   label: string;
-  theme?: 'primary';
+  theme?: "primary";
   onPress?: () => void;
   disabled?: boolean;
-}
+};
 
-const Button = ({
-  label,
-  theme,
-  onPress,
-  disabled = false
-}: Props) => {
+const Button = ({ label, theme, onPress, disabled = false }: Props) => {
   return theme ? (
     <LinearGradient
-      colors={['#fae900CC', '#14B8A6CC', '#4ADE80CC']}
+      colors={["#fae900CC", "#14B8A6CC", "#4ADE80CC"]}
       locations={[0, 0.5, 1]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 0 }}
@@ -27,13 +22,13 @@ const Button = ({
         style={[
           styles.btn,
           {
-            backgroundColor: disabled ? "#e0e0e0" : Colors.primary
-          }
+            backgroundColor: disabled ? "#e0e0e0" : Colors.primary,
+          },
         ]}
         onPress={onPress}
         disabled={disabled}
       >
-        <Text style={[styles.btnLabel, {color: "#FFF"}]}>{label}</Text>
+        <Text style={[styles.btnLabel, { color: "#FFF" }]}>{label}</Text>
       </Pressable>
     </LinearGradient>
   ) : (
@@ -42,8 +37,8 @@ const Button = ({
         style={[
           styles.btn,
           {
-            backgroundColor: disabled ? "#e0e0e0" : Colors.primary
-          }
+            backgroundColor: disabled ? "#e0e0e0" : Colors.primary,
+          },
         ]}
         onPress={onPress}
         disabled={disabled}
@@ -51,8 +46,8 @@ const Button = ({
         <Text style={styles.btnLabel}>{label}</Text>
       </Pressable>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   btnContainer: {
@@ -63,18 +58,18 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   btn: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
     alignItems: "center",
     justifyContent: "center",
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   btnLabel: {
     fontFamily: Fonts.medium,
     fontSize: FontSizes.medium,
-    color: Colors.text_black,
+    color: Colors.background,
     lineHeight: 44,
   },
-})
+});
 
 export default Button;
