@@ -1,10 +1,10 @@
 import { z } from "zod";
 
 export const LoginSchema = z.object({
-  username: z
+  email: z
     .string()
-    .nonempty("Tên đăng nhập không được bỏ trống")
-    .min(3, "Tên đăng nhập ít nhất 3 ký tự"),
+    .nonempty("Email không được bỏ trống")
+    .email("Email không hợp lệ"),
   password: z
     .string()
     .nonempty("Mật khẩu không được bỏ trống")

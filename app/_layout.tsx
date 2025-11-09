@@ -1,24 +1,24 @@
 import { useEffect } from "react";
-import { SplashScreen, Stack, useRouter } from "expo-router";
+import { SplashScreen, Stack, router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 import LoadingScreen from "@/components/Loading";
+import Toast from "react-native-toast-message";
+import { toastConfig } from "@/utils/toastConfig";
 
 const queryClient = new QueryClient();
 
-function MainStack() {
-  const router = useRouter();
-  const { isLoggedIn, isGuest, isLoading } = useAuth();
+const RootNavigator = () => {
+  const { isLoggedIn, isLoading } = useAuth();
 
   useEffect(() => {
     if (isLoading) return;
-    if (isLoggedIn || isGuest) router.replace("/(tabs)/checkFace");
+    if (isLoggedIn) router.replace("/(tabs)/checkFace");
     else router.replace("/(screen)/login");
-  }, [isLoading, isLoggedIn, isGuest]);
+  }, [isLoading, isLoggedIn]);
 
   if (isLoading) return <LoadingScreen />;
 
@@ -39,7 +39,7 @@ function MainStack() {
       />
     </Stack>
   );
-}
+};
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -58,8 +58,9 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <SafeAreaProvider>
         <AuthProvider>
-          <MainStack />
-          <StatusBar style="auto" />
+          <RootNavigator />
+          <StatusBar style="light" />
+          <Toast config={toastConfig} />
         </AuthProvider>
       </SafeAreaProvider>
     </QueryClientProvider>

@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios, { AxiosError, AxiosInstance } from "axios";
 import { router } from "expo-router";
 import { STORAGE_KEY } from "../constants/common";
+import { PUBLIC_URL } from "@env";
 
 const createAxiosInstance = (baseURL: string): AxiosInstance => {
   const instance = axios.create({
@@ -26,13 +27,14 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
     (response) => {
       const { data } = response;
 
-      if(data?.code === 401) {
+      if (data?.code === 401) {
         AsyncStorage.removeItem(STORAGE_KEY.ACCESS_TOKEN);
-        router.replace("/(screen)/login")
+        router.replace("/(screen)/login");
       }
       if (data?.code === 400) {
         console.log(data.message || "Đã có lỗi xảy ra");
       }
+      console.log("✅ RESPONSE:", response.status, response.data);
       return Promise.resolve(response);
     },
     async (error) => {
@@ -42,16 +44,17 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
         await AsyncStorage.removeItem(STORAGE_KEY.ACCESS_TOKEN);
         router.replace("/(screen)/login");
       }
-
+      console.log("❌ RESPONSE ERROR:", error, error);
+      console.log("❌ RAW ERROR:", error.message);
       return Promise.reject(error);
     }
   );
 
   return instance;
-}
+};
 
-const BASE_URL = process.env.PUBLIC_URL || "";
+const BASE_URL = `${PUBLIC_URL}`;
 
-const axiosInstance = createAxiosInstance(`${BASE_URL}/api/v1`);
-
+const axiosInstance = createAxiosInstance(`${BASE_URL}api`);
+console.log("📡 BASE_URL:", axiosInstance.defaults.baseURL);
 export default axiosInstance;

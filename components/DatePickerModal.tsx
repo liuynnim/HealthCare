@@ -14,7 +14,7 @@ const DatePickerModal = ({ value, onChange }: DatePickerModalProps) => {
   const [isPickerVisible, setPickerVisible] = useState(false);
 
   const handleConfirm = (date: Date) => {
-    const formatted = dayjs(date).format("DD-MM-YYYY");
+    const formatted = dayjs(date).format("YYYY-MM-DD");
     setPickerVisible(false);
     onChange?.(formatted);
   };
@@ -22,7 +22,9 @@ const DatePickerModal = ({ value, onChange }: DatePickerModalProps) => {
   return (
     <>
       <Pressable style={styles.input} onPress={() => setPickerVisible(true)}>
-        <Text style={styles.inputText}>{value || "Chọn ngày sinh"}</Text>
+        <Text style={[[styles.inputText, !value && { color: "#8E8E8E" }]]}>
+          {value || "Chọn ngày sinh"}
+        </Text>
       </Pressable>
 
       <DateTimePickerModal
@@ -41,12 +43,6 @@ const DatePickerModal = ({ value, onChange }: DatePickerModalProps) => {
 export default DatePickerModal;
 
 const styles = StyleSheet.create({
-  label: {
-    color: Colors.text_secondary,
-    fontFamily: Fonts.medium,
-    fontSize: FontSizes.smaill,
-    marginBottom: 4,
-  },
   input: {
     backgroundColor: "#262626",
     borderRadius: 12,

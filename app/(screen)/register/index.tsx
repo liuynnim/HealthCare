@@ -1,9 +1,13 @@
 import { BlobShape } from "@/components/BlobShape";
 import DatePickerModal from "@/components/DatePickerModal";
+import { NotifyTypeEnum } from "@/constants/notify";
 import { RegisterFromData, RegisterSchema } from "@/schema/RegisterSchema";
+import { registerData } from "@/services/api/auth/register";
 import { Colors, SafeAreaViewStyles } from "@/styles/Common";
+import { notify } from "@/utils/notify";
 import { Ionicons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
@@ -14,22 +18,47 @@ const Register = () => {
   const [isVisiblePassword, setIsVisiblePassword] = useState(false);
   const [isVisibleCheckPassword, setIsVisibleCheckPassword] = useState(false);
 
-  const { control, handleSubmit } = useForm<RegisterFromData>({
+  const { control, handleSubmit, getValues } = useForm<RegisterFromData>({
     resolver: zodResolver(RegisterSchema),
     mode: "onBlur",
     defaultValues: {
-      username: "",
       password: "",
       email: "",
       name: "",
       checkPassword: "",
+      dateOfBirth: undefined,
+    },
+  });
+  const registerMutation = useMutation({
+    mutationFn: (payload: any) => registerData(payload),
+
+    onSuccess: (response: any) => {
+      if (response.success) {
+        notify(
+          response?.message || "Đăng ký thành công",
+          NotifyTypeEnum.SUCCESS
+        );
+      }
+    },
+    onError: (error: any) => {
+      notify(error.message || "Lỗi kết nối máy chủ", NotifyTypeEnum.ERROR);
     },
   });
 
-  const onSubmit = (data: RegisterFromData) => {
-    console.log("Register data:", data);
+  const onSubmit = () => {
+    const { checkPassword, ...payload } = getValues();
+    const formatted = {
+      ...payload,
+    };
+    console.log(formatted);
+    registerMutation.mutate(formatted);
   };
-
+  const onInvalid = (errors: any) => {
+    const firstError = Object.values(errors)[0] as { message?: string };
+    const message =
+      firstError?.message || "Vui lòng kiểm tra lại thông tin đăng ký";
+    notify(message, NotifyTypeEnum.ERROR);
+  };
   return (
     <SafeAreaView
       style={[
@@ -120,21 +149,6 @@ const Register = () => {
             )}
           />
 
-          <Controller
-            control={control}
-            name="username"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                style={styles.input}
-                placeholder="Tên đăng nhập"
-                placeholderTextColor="#8E8E8E"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-              />
-            )}
-          />
-
           <View style={styles.passwordContainer}>
             <Controller
               control={control}
@@ -196,7 +210,7 @@ const Register = () => {
           {/* Button */}
           <Pressable
             style={styles.submitButton}
-            onPress={handleSubmit(onSubmit)}
+            onPress={handleSubmit(onSubmit, onInvalid)}
           >
             <Text style={styles.primaryText}>Đăng ký</Text>
           </Pressable>

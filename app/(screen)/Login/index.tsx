@@ -1,5 +1,4 @@
 import { BlobShape } from "@/components/BlobShape";
-import Button from "@/components/Button";
 import { useAuth } from "@/context/AuthContext";
 import { LoginFormData, LoginSchema } from "@/schema/loginSchema";
 import { Colors, SafeAreaViewStyles } from "@/styles/Common";
@@ -15,24 +14,22 @@ import styles from "./styles";
 
 const LoginScreen = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const { login, skipLogin } = useAuth();
+  const { login } = useAuth();
   const router = useRouter();
+
+
 
   const { control, handleSubmit } = useForm<LoginFormData>({
     resolver: zodResolver(LoginSchema),
     mode: "onBlur",
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
   });
 
   const handleLogin = async () => {
     await login();
-  };
-
-  const handleSkip = async () => {
-    await skipLogin();
   };
 
   return (
@@ -89,11 +86,11 @@ const LoginScreen = () => {
         <View style={styles.formCard}>
           <Controller
             control={control}
-            name="username"
+            name="email"
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
                 style={styles.input}
-                placeholder="Tên đăng nhập"
+                placeholder="Email"
                 placeholderTextColor="#8E8E8E"
                 onBlur={onBlur}
                 onChangeText={onChange}
@@ -164,11 +161,6 @@ const LoginScreen = () => {
           </Pressable>
         </View>
       </ScrollView>
-
-      {/* ---- Skip ---- */}
-      <View style={styles.skipContainer}>
-        <Button label="Bỏ qua" onPress={handleSkip} />
-      </View>
     </SafeAreaView>
   );
 };
