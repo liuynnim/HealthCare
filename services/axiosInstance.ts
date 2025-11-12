@@ -1,8 +1,8 @@
+import { PUBLIC_URL } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios, { AxiosError, AxiosInstance } from "axios";
 import { router } from "expo-router";
 import { STORAGE_KEY } from "../constants/common";
-import { PUBLIC_URL } from "@env";
 
 const createAxiosInstance = (baseURL: string): AxiosInstance => {
   const instance = axios.create({
@@ -35,7 +35,7 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
         console.log(data.message || "Đã có lỗi xảy ra");
       }
       console.log("✅ RESPONSE:", response.status, response.data);
-      return Promise.resolve(response);
+      return Promise.resolve(response.data);
     },
     async (error) => {
       const status = error?.response?.status;

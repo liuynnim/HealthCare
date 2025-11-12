@@ -1,13 +1,13 @@
-import { useEffect } from "react";
+import LoadingScreen from "@/components/Loading";
+import { AuthProvider, useAuth } from "@/context/AuthContext";
+import { toastConfig } from "@/utils/toastConfig";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useFonts } from "expo-font";
 import { SplashScreen, Stack, router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useFonts } from "expo-font";
+import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { AuthProvider, useAuth } from "@/context/AuthContext";
-import LoadingScreen from "@/components/Loading";
 import Toast from "react-native-toast-message";
-import { toastConfig } from "@/utils/toastConfig";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +30,10 @@ const RootNavigator = () => {
       />
       <Stack.Screen
         name="(screen)/register/index"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="(screen)/register/VerifyCodeScreen"
         options={{ headerShown: false }}
       />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

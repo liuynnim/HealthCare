@@ -1,17 +1,24 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import { STORAGE_KEY } from "@/constants/common";
+import { NotifyTypeEnum } from "@/constants/notify";
+import { LoginFormData } from "@/schema/loginSchema";
+import { postLogin } from "@/services/api/auth/login";
+import { notify } from "@/utils/notify";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useMutation } from "@tanstack/react-query";
+import { router } from "expo-router";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 type AuthContextType = {
   isLoggedIn: boolean;
   isLoading: boolean;
-  login: () => Promise<void>;
+  login: (payload: LoginFormData) => Promise<void>;
   logout: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType>({
   isLoggedIn: false,
   isLoading: false,
-  login: async () => {},
+  login: async (payload: LoginFormData) => {},
   logout: async () => {},
 });
 
@@ -33,8 +40,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     loadAuthState();
   }, []);
 
-  const login = async () => {
-    await AsyncStorage.setItem("token", "dummy_token");
+  const getMe = useMutation({
+    mutationFn: (payload: LoginFormData) => postLogin(payload),
+    onSuccess: async (res: any) => {
+      await AsyncStorage.setItem(STORAGE_KEY.ACCESS_TOKEN, res.accessToken);
+      await AsyncStorage.setItem(STORAGE_KEY.REFRESH_TOKEN, res.refreshToken);
+      notify("Đăng nhập thành công", NotifyTypeEnum.SUCCESS);
+      router.replace("/(screen)/checkFace");
+    },
+  });
+
+  const login = async (payload: LoginFormData) => {
+    getMe.mutate(payload);
     setIsLoggedIn(true);
   };
 

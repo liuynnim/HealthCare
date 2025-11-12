@@ -8,7 +8,7 @@ export const LoginSchema = z.object({
   password: z
     .string()
     .nonempty("Mật khẩu không được bỏ trống")
-    .min(6, "Mật khẩu ít nhất 6 ký tự"),
+    .min(8, "Mật khẩu ít nhất 8 ký tự"),
 });
 
 export type LoginFormData = z.infer<typeof LoginSchema>;

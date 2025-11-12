@@ -1,4 +1,3 @@
-import Button from "@/components/Button";
 import SubHeader from "@/components/SubHeader";
 import { SafeAreaViewStyles } from "@/styles/Common";
 import { Image } from "expo-image";
@@ -80,12 +79,9 @@ const CheckFaceScreen = () => {
               </View>
             )}
           </Pressable>
-          <Button
-            label="Chẩn đoán"
-            theme="primary"
-            onPress={handleDiagnose}
-            disabled={!selectedImage}
-          />
+          <Pressable onPress={handleDiagnose} disabled={!selectedImage}>
+            Chẩn đoán
+          </Pressable>
         </View>
       ) : (
         <View style={styles.resultWrapper}>
@@ -132,14 +128,14 @@ const CheckFaceScreen = () => {
             </View>
           </ScrollView>
 
-          <Button
-            label="Thử lại"
-            theme="primary"
+          <Pressable
             onPress={() => {
               setData(null);
               setSelectedImage(null);
             }}
-          />
+          >
+            Thử lại
+          </Pressable>
         </View>
       )}
     </View>

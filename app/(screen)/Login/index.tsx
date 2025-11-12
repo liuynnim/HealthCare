@@ -17,8 +17,6 @@ const LoginScreen = () => {
   const { login } = useAuth();
   const router = useRouter();
 
-
-
   const { control, handleSubmit } = useForm<LoginFormData>({
     resolver: zodResolver(LoginSchema),
     mode: "onBlur",
@@ -28,8 +26,8 @@ const LoginScreen = () => {
     },
   });
 
-  const handleLogin = async () => {
-    await login();
+  const handleLogin = (payload: LoginFormData) => {
+    login(payload);
   };
 
   return (
