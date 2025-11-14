@@ -1,3 +1,4 @@
+import GradientText from "@/components/GradientText";
 import { NotifyTypeEnum } from "@/constants/notify";
 import { analyzeSkin } from "@/services/api/AI/checkFace";
 import { Colors } from "@/styles/Common";
@@ -11,13 +12,11 @@ import { Image, Pressable, ScrollView, Text, View } from "react-native";
 import styles from "./styles";
 
 export default function ImageDiagnosisScreen() {
-  // State từ logic cũ
   const [selectedImage, setSelectedImage] = useState<string | undefined>(
     undefined
   );
   const [data, setData] = useState<any>(null);
 
-  // Hàm chọn ảnh (lấy từ logic cũ, áp dụng vào nút mới)
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
@@ -31,7 +30,6 @@ export default function ImageDiagnosisScreen() {
     }
   };
 
-  // Hàm thử lại (từ logic cũ)
   const handleTryAgain = () => {
     setData(null);
     setSelectedImage(undefined);
@@ -58,49 +56,79 @@ export default function ImageDiagnosisScreen() {
 
   // --- Render Màn hình ---
   return (
-    <View style={styles.container}>
+    <LinearGradient
+      colors={["#0D0D0D", "#111122", "#0F1125"]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0.5, y: 1 }}
+      style={styles.container}
+    >
+      <View
+        style={{
+          position: "absolute",
+          top: -40,
+          right: -60,
+          width: 320,
+          height: 320,
+          borderRadius: 320,
+          backgroundColor: "#8B5CF6",
+          opacity: 0.18,
+        }}
+      />
+
+      <View
+        style={{
+          position: "absolute",
+          bottom: -80,
+          left: -80,
+          width: 300,
+          height: 300,
+          borderRadius: 300,
+          backgroundColor: "#06B6D4",
+          opacity: 0.08,
+        }}
+      />
       {!data ? (
-        <>
-          <View style={styles.content}>
-            <Text style={styles.title}>Chuẩn đoán hình ảnh</Text>
-            <Text style={styles.subtitle}>
-              Tải lên hình ảnh khuân mặt của bạn để phân tích
-            </Text>
+        <View style={styles.content}>
+          <GradientText
+            colors={["#8B5CF6", "#6366F1", "#06B6D4"]}
+            style={styles.title}
+          >
+            Chuẩn đoán hình ảnh
+          </GradientText>
+          <Text style={styles.subtitle}>
+            Tải lên hình ảnh khuân mặt của bạn
+          </Text>
 
-            {/* Hộp tải ảnh lên */}
-            <Pressable style={styles.uploadBox} onPress={pickImageAsync}>
-              {selectedImage ? (
-                <Image
-                  source={{ uri: selectedImage }}
-                  style={styles.previewImage}
+          {/* Hộp tải ảnh lên */}
+          <Pressable style={styles.uploadBox} onPress={pickImageAsync}>
+            {selectedImage ? (
+              <Image
+                source={{ uri: selectedImage }}
+                style={styles.previewImage}
+              />
+            ) : (
+              <View style={styles.uploadPlaceholder}>
+                <Feather
+                  name="upload-cloud"
+                  size={60}
+                  color={Colors.accent_purple}
                 />
-              ) : (
-                <View style={styles.uploadPlaceholder}>
-                  <Feather
-                    name="upload-cloud"
-                    size={60}
-                    color={Colors.accent_purple}
-                  />
-                  <Text style={styles.uploadText}>Nhấn để tải ảnh lên</Text>
-                  <Text style={styles.uploadSubtext}>Hỗ trợ PNG, JPG</Text>
-                </View>
-              )}
-            </Pressable>
-          </View>
-
-          {/* Nút Chuẩn đoán */}
+                <Text style={styles.uploadText}>Nhấn để tải ảnh lên</Text>
+                <Text style={styles.uploadSubtext}>Hỗ trợ PNG, JPG</Text>
+              </View>
+            )}
+          </Pressable>
           <Pressable
             style={({ pressed }) => [
               styles.buttonContainer,
               (!selectedImage || uploadImage.isPending) &&
                 styles.buttonDisabled,
-              pressed && { transform: [{ scale: 0.97 }], opacity: 0.9 }, // ← hiệu ứng
+              pressed && { transform: [{ scale: 0.97 }], opacity: 0.9 },
             ]}
             onPress={onSubmit}
-            disabled={!selectedImage || uploadImage.isPending} // Logic vô hiệu hóa từ code cũ
+            disabled={!selectedImage || uploadImage.isPending}
           >
             <LinearGradient
-              // Thay đổi màu khi bị vô hiệu hóa
               colors={
                 !selectedImage || uploadImage.isPending
                   ? ["#373737", "#2A2A2A"]
@@ -121,7 +149,7 @@ export default function ImageDiagnosisScreen() {
               </Text>
             </LinearGradient>
           </Pressable>
-        </>
+        </View>
       ) : (
         // ==============================
         // 2. MÀN HÌNH KẾT QUẢ (RESULT)
@@ -152,7 +180,6 @@ export default function ImageDiagnosisScreen() {
             </ScrollView>
           </View>
 
-          {/* Nút Thử lại */}
           <Pressable
             style={({ pressed }) => [
               styles.buttonContainer,
@@ -171,8 +198,7 @@ export default function ImageDiagnosisScreen() {
           </Pressable>
         </>
       )}
-    </View>
+    </LinearGradient>
   );
 }
 
-// StyleSheet

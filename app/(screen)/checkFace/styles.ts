@@ -6,18 +6,18 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: Colors.background,
-    alignItems: "center",
   },
   content: {
     flex: 1,
-    marginBottom: 20, // Thêm khoảng cách với nút bấm
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center"
   },
   title: {
     fontSize: 28,
     fontWeight: "bold",
     color: Colors.primary,
     textAlign: "center",
-    marginTop: 50,
   },
   subtitle: {
     fontSize: 16,
@@ -28,9 +28,10 @@ const styles = StyleSheet.create({
   },
   // --- Upload Styles ---
   uploadBox: {
-    flex: 2 / 3,
+    flex: 2 / 4,
+    width: "100%",
     minHeight: 250,
-    borderWidth: 2,
+    borderWidth: 4,
     borderColor: Colors.border,
     borderStyle: "dashed",
     borderRadius: 15,
@@ -88,7 +89,7 @@ const styles = StyleSheet.create({
   },
   recommendationText: {
     fontSize: 15,
-    color: Colors.text_primary, // Dùng màu chữ chính cho khuyến nghị
+    color: Colors.text_primary,
     fontStyle: "italic",
     lineHeight: 22,
   },
@@ -103,9 +104,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 10,
     elevation: 10,
+    marginTop: 56
   },
   buttonDisabled: {
-    shadowColor: "transparent", // Tắt glow khi disabled
+    shadowColor: "transparent",
     elevation: 0,
   },
   gradient: {
@@ -120,7 +122,7 @@ const styles = StyleSheet.create({
     color: Colors.text_primary,
   },
   buttonTextDisabled: {
-    color: Colors.text_secondary, // Màu chữ mờ đi
+    color: Colors.text_secondary,
   },
 });
 
