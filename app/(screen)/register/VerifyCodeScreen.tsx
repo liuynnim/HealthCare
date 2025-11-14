@@ -25,7 +25,7 @@ const VerifyCodeScreen = ({ email }: Props) => {
       await AsyncStorage.setItem(STORAGE_KEY.ACCESS_TOKEN, res.accessToken);
       await AsyncStorage.setItem(STORAGE_KEY.REFRESH_TOKEN, res.refreshToken);
       notify(res?.message || "Đăng ký thành công", NotifyTypeEnum.SUCCESS);
-      router.replace("/(screen)/checkFace");
+      router.replace("/(screen)/ImageDiagnosis");
     },
     onError: (error: any) => {
       notify(error.message || "Lỗi kết nối máy chủ", NotifyTypeEnum.ERROR);

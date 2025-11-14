@@ -17,7 +17,7 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="checkFace"
+        name="ImageDiagnosis"
         options={{
           tabBarIcon: ({ focused }) => (
             <Image

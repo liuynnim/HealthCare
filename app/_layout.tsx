@@ -8,22 +8,16 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
-import {
-  setVisibilityAsync,
-} from "expo-navigation-bar";
+import { setVisibilityAsync } from "expo-navigation-bar";
+import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 
 const queryClient = new QueryClient();
 
 const RootNavigator = () => {
   const { isLoggedIn, isLoading } = useAuth();
   useEffect(() => {
-    (async () => {
-      await setVisibilityAsync("hidden");
-    })();
-  }, []);
-  useEffect(() => {
     if (isLoading) return;
-    if (isLoggedIn) router.replace("/(tabs)/checkFace");
+    if (isLoggedIn) router.replace("/(tabs)/ImageDiagnosis");
     else router.replace("/(screen)/login");
   }, [isLoading, isLoggedIn]);
 
@@ -45,7 +39,15 @@ const RootNavigator = () => {
       />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen
-        name="(screen)/checkFace/index"
+        name="(screen)/ImageDiagnosis/index"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="(screen)/ImageDiagnosis/ResultSection"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="(screen)/ImageDiagnosis/UploadSection"
         options={{ headerShown: false }}
       />
     </Stack>
@@ -61,6 +63,9 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (fontsLoaded) SplashScreen.hideAsync();
+    (async () => {
+      await setVisibilityAsync("hidden");
+    })();
   }, [fontsLoaded]);
 
   if (!fontsLoaded) return null;
@@ -69,7 +74,9 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <SafeAreaProvider>
         <AuthProvider>
-          <RootNavigator />
+          <ActionSheetProvider>
+            <RootNavigator />
+          </ActionSheetProvider>
           <StatusBar style="light" />
           <Toast config={toastConfig} />
         </AuthProvider>
