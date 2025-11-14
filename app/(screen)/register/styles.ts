@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontFamily: Fonts.regular,
-    fontSize: FontSizes.large,
+    fontSize: FontSizes.medium,
     color: "#6B6B6B",
     marginTop: 4,
   },

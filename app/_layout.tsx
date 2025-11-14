@@ -8,12 +8,19 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
+import {
+  setVisibilityAsync,
+} from "expo-navigation-bar";
 
 const queryClient = new QueryClient();
 
 const RootNavigator = () => {
   const { isLoggedIn, isLoading } = useAuth();
-
+  useEffect(() => {
+    (async () => {
+      await setVisibilityAsync("hidden");
+    })();
+  }, []);
   useEffect(() => {
     if (isLoading) return;
     if (isLoggedIn) router.replace("/(tabs)/checkFace");

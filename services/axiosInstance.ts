@@ -1,8 +1,9 @@
-import { PUBLIC_URL } from "@env";
+import { PUBLIC_URL, AI_URL } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios, { AxiosError, AxiosInstance } from "axios";
 import { router } from "expo-router";
 import { STORAGE_KEY } from "../constants/common";
+import { getToken } from "@/utils/auth";
 
 const createAxiosInstance = (baseURL: string): AxiosInstance => {
   const instance = axios.create({
@@ -14,7 +15,7 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
 
   instance.interceptors.request.use(
     async (config) => {
-      const token = await AsyncStorage.getItem(STORAGE_KEY.ACCESS_TOKEN);
+      const token = await getToken();
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
@@ -53,8 +54,7 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
   return instance;
 };
 
-const BASE_URL = `${PUBLIC_URL}`;
-
-const axiosInstance = createAxiosInstance(`${BASE_URL}api`);
+const axiosInstance = createAxiosInstance(`${PUBLIC_URL}api`);
+export const axiosInstanceAI = createAxiosInstance(`${AI_URL}`)
 console.log("📡 BASE_URL:", axiosInstance.defaults.baseURL);
 export default axiosInstance;

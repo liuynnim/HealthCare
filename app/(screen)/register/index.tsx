@@ -208,6 +208,7 @@ const Register = () => {
 
               {/* Button */}
               <Pressable
+                disabled={registerMutation.isPending}
                 style={styles.submitButton}
                 onPress={handleSubmit(onSubmit, onInvalid)}
               >

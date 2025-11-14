@@ -1,77 +1,126 @@
-import { Colors, Fonts, FontSizes } from "@/styles/Common";
+import { Colors } from "@/styles/Common";
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 20,
+    backgroundColor: Colors.background,
     alignItems: "center",
-    justifyContent: "flex-start",
-    paddingHorizontal: 10,
-    paddingTop: 56,
-    paddingBottom: 10,
-    gap: 56
   },
+  content: {
+    flex: 1,
+    marginBottom: 20, // Thêm khoảng cách với nút bấm
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: Colors.primary,
+    textAlign: "center",
+    marginTop: 50,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: Colors.text_secondary,
+    textAlign: "center",
+    marginBottom: 30,
+    marginTop: 8,
+  },
+  // --- Upload Styles ---
   uploadBox: {
-    width: "100%",
-    height: 300,
-    maxHeight: 500,
-    borderWidth: 1.5,
+    flex: 2 / 3,
+    minHeight: 250,
+    borderWidth: 2,
+    borderColor: Colors.border,
     borderStyle: "dashed",
-    borderColor: Colors.primary,
-    borderRadius: 12,
-    alignItems: "center",
+    borderRadius: 15,
     justifyContent: "center",
-    backgroundColor: "#F5FFFB",
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 5, height: 2 },
-  },
-  iconWrapper: {
     alignItems: "center",
+    backgroundColor: Colors.card,
+    overflow: "hidden",
   },
-  icon: {
-    width: 100,
-    height: 100,
-    tintColor: Colors.primary,
+  uploadPlaceholder: {
+    justifyContent: "center",
+    alignItems: "center",
   },
   uploadText: {
-    color: Colors.primary,
-    fontSize: 15,
-    marginTop: 10,
-    textAlign: "center",
+    marginTop: 15,
+    fontSize: 18,
+    color: Colors.text_secondary,
+    fontWeight: "500",
   },
-  preview: {
+  uploadSubtext: {
+    fontSize: 14,
+    color: Colors.text_secondary,
+    marginTop: 5,
+  },
+  previewImage: {
+    width: "100%",
+    aspectRatio: 1, // tạm thời — lát nữa mình thay bằng real aspectRatio
+    resizeMode: "contain",
+  },
+  // --- Result Styles (Mới) ---
+  resultBox: {
+    flex: 1,
+    backgroundColor: Colors.card,
+    borderRadius: 15,
+    padding: 15,
+  },
+  resultItem: {
+    marginBottom: 20,
+  },
+  resultItemTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: Colors.primary_2, // Dùng màu cyan cho tiêu đề
+    marginBottom: 8,
+  },
+  resultItemDetail: {
+    fontSize: 15,
+    color: Colors.text_secondary,
+    lineHeight: 22,
+  },
+  recommendationBox: {
+    marginTop: 10,
+    paddingTop: 15,
+    borderTopWidth: 1,
+    borderColor: Colors.border,
+  },
+  recommendationText: {
+    fontSize: 15,
+    color: Colors.text_primary, // Dùng màu chữ chính cho khuyến nghị
+    fontStyle: "italic",
+    lineHeight: 22,
+  },
+  // --- Button Styles ---
+  buttonContainer: {
+    width: "80%",
+    height: 55,
+    borderRadius: 15,
+    overflow: "hidden",
+    shadowColor: Colors.glow,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+    elevation: 10,
+  },
+  buttonDisabled: {
+    shadowColor: "transparent", // Tắt glow khi disabled
+    elevation: 0,
+  },
+  gradient: {
     width: "100%",
     height: "100%",
-    borderRadius: 12,
-    resizeMode: "cover",
+    justifyContent: "center",
+    alignItems: "center",
   },
-  /** Phần kết quả **/
-  resultWrapper: {
-    flex: 1,
-    padding: 20,
-    gap: 56,
-    alignItems: "center"
+  buttonText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: Colors.text_primary,
   },
-  resultTitle: {
-    fontSize: 20,
-    fontWeight: "600",
-    color: "#14B8A6",
-  },
-  resultBox: {
-    marginTop: -30,
-    flex: 1,
-    maxHeight: 450,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 12,
-    backgroundColor: "#fff",
-  },
-  resultText: {
-    fontFamily: Fonts.medium,
-    fontSize: FontSizes.medium,
-    lineHeight: 22,
-    color: "#333",
+  buttonTextDisabled: {
+    color: Colors.text_secondary, // Màu chữ mờ đi
   },
 });
 

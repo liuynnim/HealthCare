@@ -29,10 +29,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const loadAuthState = async () => {
       try {
-        // const userToken = await AsyncStorage.getItem("token");
-        // const guestMode = await AsyncStorage.getItem("guest");
-        // if (userToken) setIsLoggedIn(true);
-        // else if (guestMode === "true") setIsGuest(true);
+        const accessToken = await AsyncStorage.getItem(
+          STORAGE_KEY.ACCESS_TOKEN
+        );
+        if (accessToken) {
+          setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false);
+        }
       } finally {
         setIsLoading(false);
       }
@@ -45,6 +49,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     onSuccess: async (res: any) => {
       await AsyncStorage.setItem(STORAGE_KEY.ACCESS_TOKEN, res.accessToken);
       await AsyncStorage.setItem(STORAGE_KEY.REFRESH_TOKEN, res.refreshToken);
+      setIsLoggedIn(true)
       notify("Đăng nhập thành công", NotifyTypeEnum.SUCCESS);
       router.replace("/(screen)/checkFace");
     },
@@ -52,7 +57,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = async (payload: LoginFormData) => {
     getMe.mutate(payload);
-    setIsLoggedIn(true);
   };
 
   const logout = async () => {

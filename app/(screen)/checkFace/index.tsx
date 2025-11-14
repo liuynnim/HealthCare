@@ -1,45 +1,27 @@
-import SubHeader from "@/components/SubHeader";
-import { SafeAreaViewStyles } from "@/styles/Common";
-import { Image } from "expo-image";
+import { NotifyTypeEnum } from "@/constants/notify";
+import { analyzeSkin } from "@/services/api/AI/checkFace";
+import { Colors } from "@/styles/Common";
+import { notify } from "@/utils/notify";
+import { Feather } from "@expo/vector-icons";
+import { useMutation } from "@tanstack/react-query";
 import * as ImagePicker from "expo-image-picker";
-import { useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useState } from "react";
+import { Image, Pressable, ScrollView, Text, View } from "react-native";
 import styles from "./styles";
-const iconChandoan = require("@/assets/image/chandoan.png");
 
-const mockResultData = {
-  summary: "Khuôn mặt có dấu hiệu mệt mỏi nhẹ, vùng da dưới mắt hơi sạm.",
-  diagnosis: [
-    {
-      title: "1️⃣ Da và vùng mắt",
-      detail:
-        "Có dấu hiệu thâm nhẹ ở vùng mắt, có thể do thiếu ngủ hoặc căng thẳng kéo dài.\n" +
-        "Đề xuất: Nghỉ ngơi đủ giấc, kết hợp bổ sung vitamin C và uống đủ nước mỗi ngày.",
-    },
-    {
-      title: "2️⃣ Màu da tổng thể",
-      detail:
-        "Màu da nhợt nhạt hơn so với bình thường, có khả năng cơ thể đang thiếu máu nhẹ hoặc thiếu dinh dưỡng.\n" +
-        "Đề xuất: Ăn thêm các thực phẩm giàu sắt như thịt bò, trứng và rau xanh.",
-    },
-    {
-      title: "3️⃣ Khu vực miệng và môi",
-      detail:
-        "Môi hơi khô và nhợt, có thể do cơ thể mất nước hoặc thời tiết hanh khô.\n" +
-        "Đề xuất: Uống đủ nước (2–2.5L/ngày) và dùng son dưỡng môi không màu để bảo vệ môi.",
-    },
-  ],
-  recommendation:
-    "Tổng thể sức khỏe ổn định, chỉ cần điều chỉnh giấc ngủ, chế độ ăn và tăng cường vận động nhẹ mỗi ngày.",
-};
+export default function ImageDiagnosisScreen() {
+  // State từ logic cũ
+  const [selectedImage, setSelectedImage] = useState<string | undefined>(
+    undefined
+  );
+  const [data, setData] = useState<any>(null);
 
-const CheckFaceScreen = () => {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [data, setData] = useState<any>(mockResultData);
-
+  // Hàm chọn ảnh (lấy từ logic cũ, áp dụng vào nút mới)
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
+      allowsEditing: true,
       quality: 1,
     });
     if (!result.canceled) {
@@ -49,97 +31,148 @@ const CheckFaceScreen = () => {
     }
   };
 
-  const handleDiagnose = () => {
-    if (!selectedImage) return;
-    console.log("Diagnosing image:", selectedImage);
+  // Hàm thử lại (từ logic cũ)
+  const handleTryAgain = () => {
+    setData(null);
+    setSelectedImage(undefined);
   };
 
+  const uploadImage = useMutation({
+    mutationFn: (imgUri: string) => analyzeSkin(imgUri),
+    onSuccess: (response: any) => {
+      notify(
+        response?.message || "Phân tích thành công",
+        NotifyTypeEnum.SUCCESS
+      );
+      console.log(response);
+    },
+    onError: (error: any) => {
+      notify(error.message || "Lỗi kết nối máy chủ", NotifyTypeEnum.ERROR);
+    },
+  });
+
+  const onSubmit = () => {
+    if (!selectedImage) return;
+    uploadImage.mutate(selectedImage);
+  };
+
+  // --- Render Màn hình ---
   return (
-    <View style={SafeAreaViewStyles.SafeAreaView}>
-      <SubHeader source={iconChandoan} title={"Chẩn đoán sức khỏe"} />
-
+    <View style={styles.container}>
       {!data ? (
-        <View style={styles.container}>
-          <Pressable style={styles.uploadBox} onPress={pickImageAsync}>
-            {selectedImage ? (
-              <Image
-                source={{ uri: selectedImage }}
-                style={styles.preview}
-                contentFit="contain"
-              />
-            ) : (
-              <View style={styles.iconWrapper}>
+        <>
+          <View style={styles.content}>
+            <Text style={styles.title}>Chuẩn đoán hình ảnh</Text>
+            <Text style={styles.subtitle}>
+              Tải lên hình ảnh khuân mặt của bạn để phân tích
+            </Text>
+
+            {/* Hộp tải ảnh lên */}
+            <Pressable style={styles.uploadBox} onPress={pickImageAsync}>
+              {selectedImage ? (
                 <Image
-                  source={require("@/assets/image/camera.png")}
-                  style={styles.icon}
+                  source={{ uri: selectedImage }}
+                  style={styles.previewImage}
                 />
-                <Text style={styles.uploadText}>
-                  Nhấn để tải ảnh {"\n"}hoặc chụp trực tiếp
-                </Text>
-              </View>
-            )}
-          </Pressable>
-          <Pressable onPress={handleDiagnose} disabled={!selectedImage}>
-            Chẩn đoán
-          </Pressable>
-        </View>
-      ) : (
-        <View style={styles.resultWrapper}>
-          <Text style={styles.resultTitle}>Kết quả chẩn đoán</Text>
+              ) : (
+                <View style={styles.uploadPlaceholder}>
+                  <Feather
+                    name="upload-cloud"
+                    size={60}
+                    color={Colors.accent_purple}
+                  />
+                  <Text style={styles.uploadText}>Nhấn để tải ảnh lên</Text>
+                  <Text style={styles.uploadSubtext}>Hỗ trợ PNG, JPG</Text>
+                </View>
+              )}
+            </Pressable>
+          </View>
 
-          {/* Khung có thể cuộn nếu nội dung dài */}
-          <ScrollView
-            style={styles.resultBox}
-            contentContainerStyle={{ padding: 12 }}
-            showsVerticalScrollIndicator
+          {/* Nút Chuẩn đoán */}
+          <Pressable
+            style={({ pressed }) => [
+              styles.buttonContainer,
+              (!selectedImage || uploadImage.isPending) &&
+                styles.buttonDisabled,
+              pressed && { transform: [{ scale: 0.97 }], opacity: 0.9 }, // ← hiệu ứng
+            ]}
+            onPress={onSubmit}
+            disabled={!selectedImage || uploadImage.isPending} // Logic vô hiệu hóa từ code cũ
           >
-            <Text style={styles.resultText}>{mockResultData.summary}</Text>
-
-            {mockResultData.diagnosis.map((item, index) => (
-              <View key={index} style={{ marginTop: 12 }}>
-                <Text
-                  style={[
-                    styles.resultText,
-                    { fontWeight: "600", color: "#14B8A6" },
-                  ]}
-                >
-                  {item.title}
-                </Text>
-                <Text style={styles.resultText}>{item.detail}</Text>
-              </View>
-            ))}
-
-            <View
-              style={{
-                marginTop: 16,
-                paddingTop: 8,
-                borderTopWidth: 1,
-                borderColor: "#eee",
-              }}
+            <LinearGradient
+              // Thay đổi màu khi bị vô hiệu hóa
+              colors={
+                !selectedImage || uploadImage.isPending
+                  ? ["#373737", "#2A2A2A"]
+                  : [Colors.primary, Colors.primary_2]
+              }
+              start={{ x: 0, y: 0.5 }}
+              end={{ x: 1, y: 0.5 }}
+              style={styles.gradient}
             >
               <Text
                 style={[
-                  styles.resultText,
-                  { fontStyle: "italic", color: "#0F766E" },
+                  styles.buttonText,
+                  (!selectedImage || uploadImage.isPending) &&
+                    styles.buttonTextDisabled,
                 ]}
               >
-                👉 {mockResultData.recommendation}
+                Chuẩn đoán
               </Text>
-            </View>
-          </ScrollView>
-
-          <Pressable
-            onPress={() => {
-              setData(null);
-              setSelectedImage(null);
-            }}
-          >
-            Thử lại
+            </LinearGradient>
           </Pressable>
-        </View>
+        </>
+      ) : (
+        // ==============================
+        // 2. MÀN HÌNH KẾT QUẢ (RESULT)
+        // ==============================
+        <>
+          <View style={styles.content}>
+            <Text style={styles.title}>Kết quả chẩn đoán</Text>
+            <Text style={styles.subtitle}>{data.summary}</Text>
+
+            {/* Khung kết quả có thể cuộn */}
+            <ScrollView
+              style={styles.resultBox}
+              showsVerticalScrollIndicator={false}
+            >
+              {data.diagnosis.map((item: any, index: any) => (
+                <View key={index} style={styles.resultItem}>
+                  <Text style={styles.resultItemTitle}>{item.title}</Text>
+                  <Text style={styles.resultItemDetail}>{item.detail}</Text>
+                </View>
+              ))}
+
+              {/* Khuyến nghị */}
+              <View style={styles.recommendationBox}>
+                <Text style={styles.recommendationText}>
+                  👉 {data.recommendation}
+                </Text>
+              </View>
+            </ScrollView>
+          </View>
+
+          {/* Nút Thử lại */}
+          <Pressable
+            style={({ pressed }) => [
+              styles.buttonContainer,
+              pressed && { transform: [{ scale: 0.97 }], opacity: 0.9 },
+            ]}
+            onPress={handleTryAgain}
+          >
+            <LinearGradient
+              colors={[Colors.primary, Colors.primary_2]}
+              start={{ x: 0, y: 0.5 }}
+              end={{ x: 1, y: 0.5 }}
+              style={styles.gradient}
+            >
+              <Text style={styles.buttonText}>Thử lại</Text>
+            </LinearGradient>
+          </Pressable>
+        </>
       )}
     </View>
   );
-};
+}
 
-export default CheckFaceScreen;
+// StyleSheet

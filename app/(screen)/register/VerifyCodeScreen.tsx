@@ -1,7 +1,7 @@
 import { VerifyRegisterPayload } from "@/app/types/register";
 import { STORAGE_KEY } from "@/constants/common";
 import { NotifyTypeEnum } from "@/constants/notify";
-import { verifyRegister } from "@/services/api/auth/register";
+import { resendMail, verifyRegister } from "@/services/api/auth/register";
 import { Colors, Fonts, FontSizes } from "@/styles/Common";
 import { notify } from "@/utils/notify";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -37,25 +37,40 @@ const VerifyCodeScreen = ({ email }: Props) => {
       email,
       code,
     };
-    console.log(payload);
     verifyRegisterMutation.mutate(payload);
   };
 
+  const resendMailMutation = useMutation({
+    mutationFn: (email: string) => resendMail(email),
+    onSuccess: (response: any) => {
+      notify(
+        response?.data?.message || "Mã xác nhận đã được gửi lại thành công",
+        NotifyTypeEnum.SUCCESS
+      );
+      // countdown 30s
+      setResendDisabled(true);
+      setTimer(30);
+      const interval = setInterval(() => {
+        setTimer((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            setResendDisabled(false);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    },
+    onError: (error: any) => {
+      notify(
+        error?.message || "Không thể gửi lại mã xác nhận",
+        NotifyTypeEnum.ERROR
+      );
+    },
+  });
+
   const handleResend = () => {
-    console.log("Resend verification code");
-    setResendDisabled(true);
-    setTimer(30);
-    // TODO: call API resend
-    const interval = setInterval(() => {
-      setTimer((prev) => {
-        if (prev <= 1) {
-          clearInterval(interval);
-          setResendDisabled(false);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+    resendMailMutation.mutate(email);
   };
 
   return (
@@ -79,6 +94,7 @@ const VerifyCodeScreen = ({ email }: Props) => {
           disabled={resendDisabled}
           onPress={handleResend}
           style={[styles.resendBtn, resendDisabled && { opacity: 0.5 }]}
+          
         >
           <Text style={styles.resendText}>
             {resendDisabled ? `Gửi lại (${timer}s)` : "Gửi lại"}
@@ -86,7 +102,7 @@ const VerifyCodeScreen = ({ email }: Props) => {
         </Pressable>
       </View>
 
-      <Pressable style={styles.submitButton} onPress={handleVerify}>
+      <Pressable disabled={verifyRegisterMutation.isPending} style={styles.submitButton} onPress={handleVerify}>
         <Text style={styles.primaryText}>Xác nhận</Text>
       </Pressable>
     </View>
@@ -145,7 +161,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     height: 56,
     marginTop: 8,
-    width:250
+    width: 250,
   },
   primaryText: {
     color: "black",
