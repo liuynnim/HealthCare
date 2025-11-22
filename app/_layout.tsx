@@ -42,14 +42,6 @@ const RootNavigator = () => {
         name="(screen)/ImageDiagnosis/index"
         options={{ headerShown: false }}
       />
-      <Stack.Screen
-        name="(screen)/ImageDiagnosis/ResultSection"
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="(screen)/ImageDiagnosis/UploadSection"
-        options={{ headerShown: false }}
-      />
     </Stack>
   );
 };

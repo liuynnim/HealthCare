@@ -1,6 +1,6 @@
-import React from "react";
-import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
 import { Colors } from "@/styles/Common";
+import React from "react";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
 const LoadingScreen = ({ message = "Đang tải..." }: { message?: string }) => {
   return (
@@ -16,7 +16,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: Colors.background,
   },
   text: {
     marginTop: 16,

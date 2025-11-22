@@ -1,4 +1,5 @@
 import GradientText from "@/components/GradientText";
+import LoadingScreen from "@/components/Loading";
 import { NotifyTypeEnum } from "@/constants/notify";
 import { analyzeSkin } from "@/services/api/AI/checkFace";
 import { Colors } from "@/styles/Common";
@@ -9,9 +10,10 @@ import { useMutation } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
 import { LinearGradient } from "expo-linear-gradient";
-import React, { Dispatch, SetStateAction } from "react";
+import { setVisibilityAsync } from "expo-navigation-bar";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { Pressable, Text, View } from "react-native";
-import styles from "./styles";
+import styles from "./uploadStyles";
 
 type Props = {
   selectedImage: string | undefined;
@@ -24,6 +26,8 @@ const UploadSection: React.FC<Props> = ({
   setData,
 }) => {
   const { showActionSheetWithOptions } = useActionSheet();
+  // handel upload box size
+  const [imageRatio, setImageRatio] = useState<number | null>(null);
 
   const openImagePickerMenu = () => {
     const options = ["Chụp ảnh", "Chọn từ thư viện", "Hủy"];
@@ -41,17 +45,30 @@ const UploadSection: React.FC<Props> = ({
             allowsEditing: true,
             quality: 1,
           });
-          if (!result.canceled) setSelectedImage(result.assets[0].uri);
+          setTimeout(() => {
+            setVisibilityAsync("hidden");
+          }, 100);
+          if (!result.canceled) {
+            const asset = result.assets[0];
+            setSelectedImage(asset.uri);
+            setImageRatio(asset.width / asset.height);
+          }
         }
 
         if (buttonIndex === 1) {
-          // CHỌN TỪ THƯ VIỆN
           let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ["images"],
             allowsEditing: true,
             quality: 1,
           });
-          if (!result.canceled) setSelectedImage(result.assets[0].uri);
+          setTimeout(() => {
+            setVisibilityAsync("hidden");
+          }, 100);
+          if (!result.canceled) {
+            const asset = result.assets[0];
+            setSelectedImage(asset.uri);
+            setImageRatio(asset.width / asset.height);
+          }
         }
       }
     );
@@ -75,6 +92,11 @@ const UploadSection: React.FC<Props> = ({
     if (!selectedImage) return;
     uploadImage.mutate(selectedImage);
   };
+
+  if (uploadImage.isPending) {
+    return <LoadingScreen message="Đang phân tích hình ảnh..." />;
+  }
+
   return (
     <View style={styles.content}>
       <GradientText
@@ -88,7 +110,13 @@ const UploadSection: React.FC<Props> = ({
       {/* Hộp tải ảnh lên */}
       <Pressable style={styles.uploadBox} onPress={openImagePickerMenu}>
         {selectedImage ? (
-          <Image source={{ uri: selectedImage }} style={styles.previewImage} />
+          <Image
+            source={{ uri: selectedImage }}
+            style={[
+              styles.previewImage,
+              imageRatio ? { aspectRatio: imageRatio } : {},
+            ]}
+          />
         ) : (
           <View style={styles.uploadPlaceholder}>
             <Feather
