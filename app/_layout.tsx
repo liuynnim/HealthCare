@@ -50,6 +50,10 @@ const RootNavigator = () => {
         name="(screen)/profile/index"
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="(screen)/medicationReminder/index"
+        options={{ headerShown: false }}
+      />
     </Stack>
   );
 };

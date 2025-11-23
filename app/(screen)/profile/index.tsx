@@ -1,11 +1,10 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, Pressable } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import { SafeAreaView } from "react-native-safe-area-context";
 import GradientText from "@/components/GradientText";
-import { Image } from "expo-image";
+import { useAuth } from "@/context/AuthContext";
 import { Colors } from "@/styles/Common";
-import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useState } from "react";
+import { Pressable, Text, TextInput, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "./profileStyles";
 
 export default function ProfileScreen() {
@@ -14,9 +13,11 @@ export default function ProfileScreen() {
     weight: "70",
     height: "175",
   });
-
-  const [editingField, setEditingField] =
-    useState<"email" | "weight" | "height" | null>(null);
+  const { logout } = useAuth();
+  
+  const [editingField, setEditingField] = useState<
+    "email" | "weight" | "height" | null
+  >(null);
 
   const handleSave = () => setEditingField(null);
 
@@ -33,7 +34,6 @@ export default function ProfileScreen() {
         <View style={styles.circleBottom} />
 
         <View style={styles.content}>
-
           {/* Name */}
           <GradientText
             colors={["#8B5CF6", "#6366F1", "#06B6D4"]}
@@ -118,7 +118,7 @@ export default function ProfileScreen() {
           </View>
 
           {/* Logout Button */}
-          <Pressable style={styles.logoutBtn}>
+          <Pressable style={styles.logoutBtn} onPress={logout}>
             <LinearGradient
               colors={[Colors.primary, Colors.primary_2]}
               start={{ x: 0, y: 0.5 }}

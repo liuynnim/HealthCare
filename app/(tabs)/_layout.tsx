@@ -1,5 +1,5 @@
 import { Colors } from "@/styles/Common";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { Tabs } from "expo-router";
 const iconChandoan = require("@/assets/image/chandoan.png");
@@ -54,6 +54,20 @@ export default function TabLayout() {
           tabBarIcon: ({ focused }) => (
             <Ionicons
               name="person-circle-outline"
+              size={40}
+              color={focused ? Colors.primary_2 : Colors.text_secondary}
+              style={{ height: 40, width: 40, marginTop: 16 }}
+            />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="MedicationReminder"
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <MaterialCommunityIcons
+              name="pill"
               size={40}
               color={focused ? Colors.primary_2 : Colors.text_secondary}
               style={{ height: 40, width: 40, marginTop: 16 }}
