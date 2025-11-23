@@ -1,8 +1,9 @@
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
 import { View } from "react-native";
-import styles from "./styles";
+import { SafeAreaView } from "react-native-safe-area-context";
 import ResultSection from "./ResultSection";
+import styles from "./styles";
 import UploadSection from "./UploadSection";
 
 export default function ImageDiagnosisScreen() {
@@ -23,7 +24,7 @@ export default function ImageDiagnosisScreen() {
         style={{
           position: "absolute",
           top: -40,
-          right: -60,
+          right: 40,
           width: 320,
           height: 320,
           borderRadius: 320,
@@ -36,7 +37,7 @@ export default function ImageDiagnosisScreen() {
         style={{
           position: "absolute",
           bottom: -80,
-          left: -80,
+          right: 50,
           width: 300,
           height: 300,
           borderRadius: 300,
@@ -44,19 +45,19 @@ export default function ImageDiagnosisScreen() {
           opacity: 0.08,
         }}
       />
-      {data ? (
-        <ResultSection
-          data={data}
-          setData={setData}
-          setSelectedImage={setSelectedImage}
-        />
-      ) : (
-        <UploadSection
-          selectedImage={selectedImage}
-          setSelectedImage={setSelectedImage}
-          setData={setData}
-        />
-      )}
+        {data ? (
+          <ResultSection
+            data={data}
+            setData={setData}
+            setSelectedImage={setSelectedImage}
+          />
+        ) : (
+          <UploadSection
+            selectedImage={selectedImage}
+            setSelectedImage={setSelectedImage}
+            setData={setData}
+          />
+        )}
     </LinearGradient>
   );
 }

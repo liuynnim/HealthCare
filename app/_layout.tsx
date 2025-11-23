@@ -1,15 +1,15 @@
 import LoadingScreen from "@/components/Loading";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 import { toastConfig } from "@/utils/toastConfig";
+import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
+import { setVisibilityAsync } from "expo-navigation-bar";
 import { SplashScreen, Stack, router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
-import { setVisibilityAsync } from "expo-navigation-bar";
-import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +40,14 @@ const RootNavigator = () => {
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen
         name="(screen)/ImageDiagnosis/index"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="(screen)/countStep/index"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="(screen)/profile/index"
         options={{ headerShown: false }}
       />
     </Stack>
