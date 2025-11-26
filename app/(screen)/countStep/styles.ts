@@ -8,7 +8,73 @@ const healthStyles = StyleSheet.create({
     padding: 20,
     backgroundColor: Colors.background,
   },
+  safeArea: {
+    flex: 1,
+  },
+  circleTopRight: {
+    position: "absolute",
+    top: -40,
+    right: -60,
+    width: 320,
+    height: 320,
+    borderRadius: 320,
+    backgroundColor: "#8B5CF6",
+    opacity: 0.18,
+  },
+  circleBottomLeft: {
+    position: "absolute",
+    bottom: -400,
+    left: -80,
+    width: 300,
+    height: 300,
+    borderRadius: 300,
+    backgroundColor: "#06B6D4",
+    opacity: 0.08,
+  },
+  progressContainer: {
+    marginTop: 20,
+    width: "100%",
+    alignItems: "center",
+  },
+  progressTitle: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 6,
+  },
 
+  progressHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 6,
+    width: "100%",
+  },
+
+  progressNumber: {
+    color: "#BBBBBB",
+    fontSize: 13,
+  },
+
+  progressBarBackground: {
+    width: "100%",
+    height: 12,
+    borderRadius: 10,
+    backgroundColor: "#FFF",
+    overflow: "hidden",
+      
+  },
+
+  progressBarFill: {
+    height: "100%",
+    borderRadius: 10,
+    backgroundColor: "#8B5CF6",
+  },
+
+  progressCurrent: {
+    marginTop: 6,
+    color: "#AAA",
+    fontSize: 13,
+  },
   content: {
     width: "100%",
     alignItems: "center",
@@ -68,6 +134,9 @@ const healthStyles = StyleSheet.create({
     borderColor: Colors.border,
     marginTop: 10,
   },
+  metricIcon: {
+    marginBottom: 6,
+  },
 
   metricsRow: {
     flexDirection: "row",
@@ -108,6 +177,43 @@ const healthStyles = StyleSheet.create({
   standText: {
     fontSize: 16,
     color: Colors.text_primary,
+  },
+
+  // --- Buttons ---
+  buttonContainer: {
+    justifyContent: "space-between",
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 30,
+    width: "100%",
+    gap: 12,
+  },
+  buttonWrapper: {
+    flex: 1,
+  },
+  buttonGradient: {
+    paddingVertical: 14,
+    borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    gap: 6,
+    elevation: 5,
+  },
+  shadowPrimary: {
+    shadowColor: "#8B5CF6",
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+  },
+  shadowSecondary: {
+    shadowColor: "#06B6D4",
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+  },
+  buttonText: {
+    color: "#FFF",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });
 

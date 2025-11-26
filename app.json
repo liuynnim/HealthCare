@@ -9,7 +9,10 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSMotionUsageDescription": "Ứng dụng cần truy cập dữ liệu chuyển động để đếm số bước."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -45,6 +48,14 @@
       "typedRoutes": true,
       "reactCompiler": true
     },
-    "assetBundlePatterns": ["./assets/fonts/*"]
+    "assetBundlePatterns": [
+      "./assets/fonts/*"
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "bc376c6c-dbf8-4da0-bc68-c63b4bb48af4"
+      }
+    }
   }
 }
