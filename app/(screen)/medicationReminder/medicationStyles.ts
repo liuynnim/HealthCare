@@ -8,8 +8,9 @@ const styles = StyleSheet.create({
   },
 
   content: {
+    flex: 1,
     width: "100%",
-    alignItems: "flex-start",
+    alignItems: "center",
   },
 
   circleTop: {
@@ -38,17 +39,21 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "700",
     marginBottom: 16,
+    textAlign: "center",
   },
 
   /* DAY SELECTOR */
   dayScroll: {
     width: "100%",
     marginBottom: 14,
+    maxHeight: 60
   },
 
   dayItem: {
+    height:60,
+    width: 60,
     paddingVertical: 8,
-    paddingHorizontal: 14,
+    paddingHorizontal: 8,
     alignItems: "center",
     borderRadius: 14,
     marginRight: 10,
@@ -105,9 +110,15 @@ const styles = StyleSheet.create({
   },
 
   /* MEDICINE LIST */
+  /* MEDICINE LIST */
   listWrapper: {
+    flex: 1,
     width: "100%",
     marginTop: 6,
+  },
+
+  listContent: {
+    paddingBottom: 32,
   },
 
   medicineCard: {

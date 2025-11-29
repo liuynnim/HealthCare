@@ -23,7 +23,7 @@ const healthStyles = StyleSheet.create({
   },
   circleBottomLeft: {
     position: "absolute",
-    bottom: -400,
+    bottom: -100,
     left: -80,
     width: 300,
     height: 300,

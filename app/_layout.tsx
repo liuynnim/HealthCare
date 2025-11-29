@@ -47,11 +47,11 @@ const RootNavigator = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="(screen)/profile/index"
+        name="(screen)/medicationReminder/index"
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="(screen)/medicationReminder/index"
+        name="(screen)/profile/index"
         options={{ headerShown: false }}
       />
     </Stack>

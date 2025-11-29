@@ -49,11 +49,11 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="Profile"
+        name="medicationReminder"
         options={{
           tabBarIcon: ({ focused }) => (
-            <Ionicons
-              name="person-circle-outline"
+            <MaterialCommunityIcons
+              name="pill"
               size={40}
               color={focused ? Colors.primary_2 : Colors.text_secondary}
               style={{ height: 40, width: 40, marginTop: 16 }}
@@ -63,11 +63,11 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="MedicationReminder"
+        name="Profile"
         options={{
           tabBarIcon: ({ focused }) => (
-            <MaterialCommunityIcons
-              name="pill"
+            <Ionicons
+              name="person-circle-outline"
               size={40}
               color={focused ? Colors.primary_2 : Colors.text_secondary}
               style={{ height: 40, width: 40, marginTop: 16 }}

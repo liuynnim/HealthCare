@@ -1,6 +1,6 @@
 // HealthScreen.tsx
 import GradientText from "@/components/GradientText";
-import { Colors } from "@/styles/Common";
+import { Colors, getGradientByPercent } from "@/styles/Common";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
@@ -8,32 +8,17 @@ import { Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useStepCounter } from "../../../hook/stepCountSensor";
 import healthStyles from "./styles";
-const getGradientByPercent = (percent: number): readonly [string, string] => {
-  if (percent < 0.3) return ["#EF4444", "#F97316"] as const; // đỏ → cam
+import {
+  CHAR_HEIGHT,
+  DAILY_STEP_GOAL,
+  WEEKLY_CALO_GOAL,
+} from "@/constants/countStep";
+import { currentCalories, stepData } from "@/mock/countStep";
 
-  if (percent < 0.6) return ["#F97316", "#FACC15"] as const; // cam → vàng
-
-  if (percent < 0.8) return ["#FACC15", "#3B82F6"] as const; // vàng → xanh dương
-
-  return ["#3B82F6", "#22C55E"] as const; // xanh dương → xanh lá
-};
-const DAILY_STEP_GOAL = 6000; // mục tiêu 1 ngày
-const WEEKLY_CALO_GOAL = 500;
 export default function HealthScreen() {
-  const stepData = [
-    { day: "T2", steps: 3200 },
-    { day: "T3", steps: 5000 },
-    { day: "T4", steps: 6800 },
-    { day: "T5", steps: 7200 },
-    { day: "T6", steps: 9000 },
-    { day: "T7", steps: 4500 },
-    { day: "CN", steps: 3000 },
-  ];
-  const currentCalories = 250;
-
   const maxSteps = Math.max(...stepData.map((d) => d.steps));
-  const chartHeight = 160;
-  const { stepsToday, isAvailable } = useStepCounter();
+
+  const { stepsToday } = useStepCounter();
   const caloriePercent = currentCalories / WEEKLY_CALO_GOAL;
   return (
     <LinearGradient
@@ -135,7 +120,7 @@ export default function HealthScreen() {
           {/* CUSTOM BAR CHART */}
           <View style={healthStyles.chartContainer}>
             {stepData.map((item, index) => {
-              const barHeight = (item.steps / maxSteps) * chartHeight;
+              const barHeight = (item.steps / maxSteps) * CHAR_HEIGHT;
               const percent = item.steps / DAILY_STEP_GOAL;
               const colors = getGradientByPercent(percent);
               return (

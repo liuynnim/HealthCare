@@ -1,32 +1,70 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { View, Text, ScrollView, Pressable } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
 import GradientText from "@/components/GradientText";
 import { Colors } from "@/styles/Common";
 import { Ionicons } from "@expo/vector-icons";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import styles from "./medicationStyles";
 
-export default function MedicationReminderScreen() {
-  const today = new Date();
-  const [selectedDay, setSelectedDay] = useState<number>(today.getDate());
+const generateDays = (centerDate: Date, range: number) => {
+  return Array.from({ length: range }, (_, i) => {
+    const d = new Date(centerDate);
+    d.setDate(centerDate.getDate() - Math.floor(range / 2) + i);
 
-  // Fake list thuốc trong ngày
-  const medicineList = [
-    { name: "Paracetamol 500mg", time: "08:00", dose: "1 viên" },
-    { name: "Vitamin C", time: "12:00", dose: "1 viên" },
-    { name: "Hạ sốt", time: "20:00", dose: "2 viên" },
-  ];
-
-  // Tạo danh sách 14 ngày để scroll
-  const days = Array.from({ length: 14 }, (_, i) => {
-    const d = new Date();
-    d.setDate(today.getDate() - 7 + i);
     return {
+      date: d,
       label: d.getDate(),
       weekday: d.toLocaleDateString("vi-VN", { weekday: "short" }),
     };
   });
+};
+
+export default function MedicationReminderScreen() {
+  const today = new Date();
+  const [selectedDay, setSelectedDay] = useState<Date>(today);
+  const dayScrollRef = useRef<ScrollView>(null);
+  const [days, setDays] = useState(generateDays(today, 14));
+  // 14 ngày quanh hôm nay
+  useEffect(() => {
+    setDays(generateDays(selectedDay, 14));
+  }, [selectedDay]);
+  // Date picker
+  const [isDatePickerVisible, setDatePickerVisible] = useState(false);
+
+  const showDatePicker = () => setDatePickerVisible(true);
+  const hideDatePicker = () => setDatePickerVisible(false);
+
+  const handleDatePicked = (date: Date) => {
+    setSelectedDay(date);
+    hideDatePicker();
+  };
+
+  useEffect(() => {
+    const selectedIndex = days.findIndex(
+      (d) => d.date.toDateString() === selectedDay.toDateString()
+    );
+
+    if (selectedIndex !== -1 && dayScrollRef.current) {
+      const itemWidth = 60 + 10;
+      const offset = selectedIndex * itemWidth - 14;
+      dayScrollRef.current.scrollTo({ x: offset - itemWidth, animated: true });
+    }
+  }, [selectedDay, days]);
+
+  // Fake list thuốc
+  const medicineList = [
+    { name: "Paracetamol 500mg", time: "08:00", dose: "1 viên" },
+    { name: "Vitamin C", time: "12:00", dose: "1 viên" },
+    { name: "Hạ sốt", time: "20:00", dose: "2 viên" },
+    { name: "Paracetamol 500mg", time: "08:00", dose: "1 viên" },
+    { name: "Vitamin C", time: "12:00", dose: "1 viên" },
+    { name: "Hạ sốt", time: "20:00", dose: "2 viên" },
+    { name: "Paracetamol 500mg", time: "08:00", dose: "1 viên" },
+    { name: "Vitamin C", time: "12:00", dose: "1 viên" },
+    { name: "Hạ sốt", time: "20:00", dose: "2 viên" },
+  ];
 
   return (
     <LinearGradient
@@ -36,12 +74,11 @@ export default function MedicationReminderScreen() {
       style={styles.container}
     >
       <SafeAreaView edges={["top"]} style={{ flex: 1 }}>
-        {/* Decor background */}
         <View style={styles.circleTop} />
         <View style={styles.circleBottom} />
 
         <View style={styles.content}>
-          {/* Title */}
+          {/* TITLE */}
           <GradientText
             colors={["#8B5CF6", "#6366F1", "#06B6D4"]}
             style={styles.title}
@@ -49,25 +86,31 @@ export default function MedicationReminderScreen() {
             Nhắc uống thuốc
           </GradientText>
 
-          {/* Scroll Days Selector */}
+          {/* DAY SELECTOR */}
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
+            ref={dayScrollRef}
             style={styles.dayScroll}
           >
+            <Pressable style={[styles.dayItem]} onPress={showDatePicker}>
+              <Ionicons name="calendar-clear-outline" size={40} color="#fff" />
+            </Pressable>
             {days.map((d, index) => (
               <Pressable
                 key={index}
-                onPress={() => setSelectedDay(d.label)}
+                onPress={() => setSelectedDay(d.date)}
                 style={[
                   styles.dayItem,
-                  selectedDay === d.label && styles.dayItemActive,
+                  selectedDay.toDateString() === d.date.toDateString() &&
+                    styles.dayItemActive,
                 ]}
               >
                 <Text
                   style={[
                     styles.dayWeekText,
-                    selectedDay === d.label && styles.dayWeekTextActive,
+                    selectedDay.toDateString() === d.date.toDateString() &&
+                      styles.dayWeekTextActive,
                   ]}
                 >
                   {d.weekday}
@@ -76,16 +119,22 @@ export default function MedicationReminderScreen() {
                 <Text
                   style={[
                     styles.dayNumber,
-                    selectedDay === d.label && styles.dayNumberActive,
+                    selectedDay.toDateString() === d.date.toDateString() &&
+                      styles.dayNumberActive,
                   ]}
                 >
                   {d.label}
                 </Text>
               </Pressable>
             ))}
+
+            {/* Ô mở DatePicker */}
+            <Pressable style={[styles.dayItem]} onPress={showDatePicker}>
+              <Ionicons name="calendar-clear-outline" size={40} color="#fff" />
+            </Pressable>
           </ScrollView>
 
-          {/* Add Button */}
+          {/* ADD BUTTON */}
           <Pressable style={styles.addButton}>
             <LinearGradient
               colors={[Colors.primary, Colors.primary_2]}
@@ -98,8 +147,12 @@ export default function MedicationReminderScreen() {
             </LinearGradient>
           </Pressable>
 
-          {/* LIST REMINDER CARDS */}
-          <View style={styles.listWrapper}>
+          {/* LIST SCROLLABLE */}
+          <ScrollView
+            style={styles.listWrapper}
+            contentContainerStyle={styles.listContent}
+            showsVerticalScrollIndicator={false}
+          >
             {medicineList.map((item, index) => (
               <View key={index} style={styles.medicineCard}>
                 <View style={styles.medicineInfo}>
@@ -121,8 +174,17 @@ export default function MedicationReminderScreen() {
                 </View>
               </View>
             ))}
-          </View>
+          </ScrollView>
         </View>
+
+        {/* DATE PICKER */}
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="date"
+          onConfirm={handleDatePicked}
+          onCancel={hideDatePicker}
+          locale="vi-VN"
+        />
       </SafeAreaView>
     </LinearGradient>
   );
