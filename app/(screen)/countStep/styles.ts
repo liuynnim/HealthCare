@@ -86,7 +86,6 @@ const healthStyles = StyleSheet.create({
     color: Colors.primary,
     textAlign: "left",
     width: "100%",
-    marginBottom: 16,
   },
 
   subtitle: {

@@ -108,6 +108,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: Fonts.medium,
   },
+  btnDisable: {
+    backgroundColor: Colors.text_primary,
+  },
+  textDisable: {
+    color: Colors.text_secondary,
+  }
 });
 
 export default styles;

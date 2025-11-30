@@ -14,7 +14,7 @@ import styles from "./styles";
 
 const LoginScreen = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const { login } = useAuth();
+  const { login, loginLoading } = useAuth();
   const router = useRouter();
 
   const { control, handleSubmit } = useForm<LoginFormData>({
@@ -129,10 +129,19 @@ const LoginScreen = () => {
 
           {/* ---- Buttons ---- */}
           <Pressable
-            style={styles.primaryButton}
+            style={({ pressed }) => [
+              styles.primaryButton,
+              loginLoading && styles.btnDisable,
+              pressed && { transform: [{ scale: 0.97 }], opacity: 0.9 },
+            ]}
             onPress={handleSubmit(handleLogin)}
+            disabled={loginLoading}
           >
-            <Text style={styles.primaryText}>Đăng nhập</Text>
+            <Text
+              style={[styles.primaryText, loginLoading && styles.textDisable]}
+            >
+              Đăng nhập
+            </Text>
           </Pressable>
 
           <Pressable onPress={() => {}}>

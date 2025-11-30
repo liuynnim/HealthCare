@@ -12,6 +12,7 @@ type AuthContextType = {
   isLoggedIn: boolean;
   isLoading: boolean;
   login: (payload: LoginFormData) => Promise<void>;
+  loginLoading: boolean;
   logout: () => Promise<void>;
 };
 
@@ -19,6 +20,7 @@ const AuthContext = createContext<AuthContextType>({
   isLoggedIn: false,
   isLoading: false,
   login: async (payload: LoginFormData) => {},
+  loginLoading: false,
   logout: async () => {},
 });
 
@@ -66,7 +68,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, isLoading, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, isLoading, login, logout, loginLoading: getMe.isPending}}>
       {children}
     </AuthContext.Provider>
   );
