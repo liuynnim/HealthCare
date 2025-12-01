@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { Colors } from "@/styles/Common";
+import { Colors, Fonts, FontSizes } from "@/styles/Common";
 
 const styles = StyleSheet.create({
   container: {
@@ -17,14 +17,15 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   inputContainer: {
-    marginBottom: 15,
+    marginBottom: 24,
   },
   input: {
+    backgroundColor: "#262626",
+    borderRadius: 12,
     height: 50,
-    backgroundColor: "#F4F4F4",
-    borderRadius: 8,
-    paddingLeft: 15,
-    fontSize: 16,
+    paddingHorizontal: 16,
+    fontFamily: Fonts.regular,
+    fontSize: FontSizes.medium,
     color: Colors.text_primary,
   },
   scheduleSection: {
@@ -54,6 +55,16 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
     fontWeight: "600",
+  },
+  requiredMark: {
+    color: "#FF4D4F", // đỏ cảnh báo, giống tone error
+    fontSize: 14, // có thể chỉnh cho khớp với label
+  },
+
+  errorText: {
+    marginTop: 4,
+    color: "#FF4D4F",
+    fontSize: 12,
   },
 });
 
