@@ -51,7 +51,7 @@ const RootNavigator = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="(screen)/medicationReminder/MedicationAddScreen"
+        name="(screen)/medicationReminder/components/MedicationAddScreen/index"
         options={{ headerShown: false }}
       />
       <Stack.Screen

@@ -12,7 +12,7 @@ import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import styles from "./styles";
+import styles from "../../../styles/register/styles";
 import VerifyCodeScreen from "./VerifyCodeScreen";
 
 const Register = () => {

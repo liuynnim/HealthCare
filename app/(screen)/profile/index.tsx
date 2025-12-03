@@ -5,7 +5,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import styles from "./profileStyles";
+import styles from "../../../styles/profile/styles";
 
 export default function ProfileScreen() {
   const [profile, setProfile] = useState({

@@ -6,7 +6,7 @@ import GradientText from "@/components/GradientText";
 import { Colors } from "@/styles/Common";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import styles from "./medicationStyles";
+import styles from "../../../styles/medicationReminder/styles";
 import { router } from "expo-router";
 
 const generateDays = (centerDate: Date, range: number) => {
@@ -136,7 +136,7 @@ export default function MedicationReminderScreen() {
           </ScrollView>
 
           {/* ADD BUTTON */}
-          <Pressable style={styles.addButton} onPress={() => router.push("/(screen)/medicationReminder/MedicationAddScreen")}>
+          <Pressable style={styles.addButton} onPress={() => router.push("/(screen)/medicationReminder/components/MedicationAddScreen")}>
             <LinearGradient
               colors={[Colors.primary, Colors.primary_2]}
               start={{ x: 0, y: 0.5 }}
