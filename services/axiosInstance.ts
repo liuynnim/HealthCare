@@ -55,6 +55,6 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
 };
 
 const axiosInstance = createAxiosInstance(`${PUBLIC_URL}api`);
-export const axiosInstanceAI = createAxiosInstance(`${AI_URL}`)
+export const axiosInstanceAI = createAxiosInstance(`${AI_URL}`);
 console.log("📡 BASE_URL:", axiosInstance.defaults.baseURL);
 export default axiosInstance;

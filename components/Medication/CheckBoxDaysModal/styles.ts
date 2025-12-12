@@ -1,3 +1,4 @@
+import { Colors } from "@/styles/Common";
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
@@ -10,26 +11,32 @@ const styles = StyleSheet.create({
 
   modalBox: {
     width: "80%",
-    backgroundColor: "#1C1C2E",
+    backgroundColor: Colors.card,
     borderRadius: 12,
     padding: 16,
+    rowGap: 10,
   },
 
   modalItem: {
-    paddingVertical: 12,
+    paddingTop: 20,
+    paddingBottom: 19,
     paddingHorizontal: 10,
     borderBottomColor: "#333",
     borderBottomWidth: 1,
   },
 
   modalItemSelected: {
-    backgroundColor: "#333",
+    backgroundColor: "rgba(99,102,241,0.25)",
+    borderWidth: 1,
+    borderColor: "rgba(99,102,241,0.4)",
+    borderBottomColor: "rgba(99,102,241,0.4)",
     borderRadius: 8,
+    paddingTop: 19,
+    paddingHorizontal: 9,
   },
 
   modalCloseButton: {
-    marginTop: 10,
-    backgroundColor: "#444",
+    marginTop: 32,
     padding: 12,
     borderRadius: 8,
   },

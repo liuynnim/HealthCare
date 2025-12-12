@@ -1,9 +1,19 @@
+import { FREQUENCY } from "@/constants/medication";
 import { z } from "zod";
+
+export const ScheduleSchema = z.array(
+  z.object({
+    time: z.string().regex(/^\d{2}:\d{2}$/),
+    dosage: z.number().min(0.25),
+  })
+);
+
+export type ScheduleData = z.infer<typeof ScheduleSchema>;
 
 export const medicationSchema = z
   .object({
     drug_id: z.number().optional(),
-    drugName: z.string().optional(),
+    drugName: z.string().min(1, "Hãy cung cấp tên thuốc"),
 
     unit_id: z.number(),
 
@@ -12,22 +22,28 @@ export const medicationSchema = z
     note: z.string().optional(),
 
     frequency_type: z.enum(["DAILY", "INTERVAL", "WEEKLY"]),
-    interval_days: z.number().optional(),
-    days_of_week: z.array(z.string()),
+    interval_days: z
+      .string()
+      .optional()
+      .transform((value) => (value ? Number(value) : undefined)),
+    days_of_week: z.array(
+      z.enum([
+        "MONDAY",
+        "TUESDAY",
+        "WEDNESDAY",
+        "THURSDAY",
+        "FRIDAY",
+        "SATURDAY",
+        "SUNDAY",
+      ])
+    ),
 
-    schedules: z
-      .array(
-        z.object({
-          time: z.string().regex(/^\d{2}:\d{2}$/),
-          dosage: z.number().min(0.25),
-        })
-      )
-      .min(1),
+    schedules: ScheduleSchema.min(1, "Hãy thêm thời gian nhắc nhở"),
   })
   .refine(
     (d) => {
-      if (d.frequency_type === "INTERVAL") {
-        return !!d.interval_days;
+      if (d.frequency_type === FREQUENCY.INTERVAL) {
+        return d.interval_days !== undefined && d.interval_days >= 1;
       }
       return true;
     },
@@ -38,7 +54,7 @@ export const medicationSchema = z
   )
   .refine(
     (d) => {
-      if (d.frequency_type === "WEEKLY") {
+      if (d.frequency_type === FREQUENCY.WEEKLY) {
         return d.days_of_week && d.days_of_week.length > 0;
       }
       return true;
@@ -49,4 +65,5 @@ export const medicationSchema = z
     }
   );
 
-export type AddReminderMedicationForm = z.infer<typeof medicationSchema>;
+export type AddReminderMedicationForm = z.input<typeof medicationSchema>;
+export type AddReminderMedicationData = z.output<typeof medicationSchema>;

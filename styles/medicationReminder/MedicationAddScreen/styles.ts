@@ -4,23 +4,29 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    padding: 20,
+    backgroundColor: Colors.background,
+    paddingHorizontal: 20,
+    paddingTop: 10,
   },
+
   scrollView: {
     flex: 1,
   },
+
   title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: Colors.text_primary,
-    marginBottom: 20,
+    fontSize: FontSizes.extraLarge,
+    fontFamily: Fonts.bold,
+    color: Colors.primary,
+    marginBottom: 26,
+    textAlign: "center",
   },
+
   inputContainer: {
     marginBottom: 24,
   },
+
   input: {
-    backgroundColor: "#262626",
+    backgroundColor: Colors.card,
     borderRadius: 12,
     height: 50,
     paddingHorizontal: 16,
@@ -28,84 +34,119 @@ const styles = StyleSheet.create({
     fontSize: FontSizes.medium,
     color: Colors.text_primary,
   },
-  scheduleSection: {
-    marginBottom: 20,
-  },
-  scheduleTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    marginBottom: 10,
-    color: Colors.text_primary,
-  },
+
   label: {
-    fontSize: 14,
-    fontWeight: "600",
-    marginBottom: 6,
+    fontFamily: Fonts.medium,
+    fontSize: FontSizes.small,
     color: Colors.text_secondary,
+    marginBottom: 6,
   },
-  saveButton: {
-    backgroundColor: Colors.primary,
-    paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 30,
-  },
-  saveText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "600",
-  },
+
   requiredMark: {
-    color: "#FF4D4F", // đỏ cảnh báo, giống tone error
-    fontSize: 14, // có thể chỉnh cho khớp với label
+    color: "#FF4D4F",
+    fontSize: FontSizes.small,
   },
 
   errorText: {
     marginTop: 4,
     color: "#FF4D4F",
-    fontSize: 12,
+    fontSize: FontSizes.small,
+    fontFamily: Fonts.regular,
   },
-  // modal
+
+  /* Select Box */
   selectBox: {
     height: 50,
-    borderWidth: 1,
-    borderColor: "#444",
+    backgroundColor: Colors.card,
     borderRadius: 12,
-    paddingHorizontal: 10,
+    paddingHorizontal: 16,
     justifyContent: "center",
   },
+
+  /* Modal overlay */
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.6)",
+    backgroundColor: "rgba(0,0,0,0.75)",
     justifyContent: "center",
     alignItems: "center",
   },
 
+  /* Modal container */
   modalBox: {
-    width: "80%",
+    width: "88%",
     backgroundColor: "#1C1C2E",
-    borderRadius: 12,
-    padding: 16,
+    borderRadius: 20,
+    padding: 20,
+    maxHeight: "70%",
   },
 
   modalItem: {
     paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderBottomColor: "#333",
+    borderBottomColor: "#2E2E3A",
     borderBottomWidth: 1,
   },
 
-  modalItemSelected: {
-    backgroundColor: "#333",
-    borderRadius: 8,
+  modalItemLabel: {
+    color: Colors.text_primary,
+    fontFamily: Fonts.medium,
+    fontSize: FontSizes.medium,
+  },
+
+  modalItemSubLabel: {
+    color: Colors.text_secondary,
+    fontFamily: Fonts.regular,
+    fontSize: FontSizes.small,
+    marginTop: 2,
   },
 
   modalCloseButton: {
+    backgroundColor: "#333",
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: "center",
+    marginTop: 14,
+  },
+
+  modalCloseText: {
+    color: Colors.text_primary,
+    fontFamily: Fonts.medium,
+    fontSize: FontSizes.medium,
+  },
+
+  /* Secondary button */
+  secondaryButton: {
     marginTop: 10,
-    backgroundColor: "#444",
-    padding: 12,
-    borderRadius: 8,
+    paddingVertical: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#222", // subtle dark background
+  },
+
+  secondaryButtonText: {
+    color: Colors.text_primary,
+    fontFamily: Fonts.medium,
+    fontSize: FontSizes.medium,
+  },
+
+  /* Save button */
+  saveButton: {
+    backgroundColor: Colors.primary,
+    paddingVertical: 15,
+    borderRadius: 28,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 30,
+  },
+
+  saveText: {
+    color: "black",
+    fontSize: 18,
+    fontFamily: Fonts.medium,
+    width: "100%",
+    textAlign: "center",
   },
 });
 

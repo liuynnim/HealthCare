@@ -5,30 +5,46 @@ export const UNIT_OPTIONS = [
   { id: 4, label: "Thể tích (ml)" },
 ];
 
+export const enum FREQUENCY {
+  DAILY = "DAILY",
+  WEEKLY = "WEEKLY",
+  INTERVAL = "INTERVAL",
+}
+
 export const FREQUENCY_OPTIONS = [
-  { value: "DAILY", label: "Hàng ngày" },
-  { value: "WEEKLY", label: "Hằng tuần" },
-  { value: "INTERVAL", label: "Cách ngày" },
+  { value: FREQUENCY.DAILY, label: "Hàng ngày" },
+  { value: FREQUENCY.WEEKLY, label: "Hằng tuần" },
+  { value: FREQUENCY.INTERVAL, label: "Cách ngày" },
 ];
 
-export const WEEK_DAYS = [
-  { value: "MONDAY", label: "Thứ Hai" },
-  { value: "TUESDAY", label: "Thứ Ba" },
-  { value: "WEDNESDAY", label: "Thứ Tư" },
-  { value: "THURSDAY", label: "Thứ Năm" },
-  { value: "FRIDAY", label: "Thứ Sáu" },
-  { value: "SATURDAY", label: "Thứ Bảy" },
-  { value: "SUNDAY", label: "Chủ nhật" },
+export const enum WEEK_DAYS {
+  MONDAY = "MONDAY",
+  TUESDAY = "TUESDAY",
+  WEDNESDAY = "WEDNESDAY",
+  THURSDAY = "THURSDAY",
+  FRIDAY = "FRIDAY",
+  SATURDAY = "SATURDAY",
+  SUNDAY = "SUNDAY",
+}
+
+export const WEEK_DAYS_OPTIONS = [
+  { value: WEEK_DAYS.MONDAY, label: "Thứ Hai" },
+  { value: WEEK_DAYS.TUESDAY, label: "Thứ Ba" },
+  { value: WEEK_DAYS.WEDNESDAY, label: "Thứ Tư" },
+  { value: WEEK_DAYS.THURSDAY, label: "Thứ Năm" },
+  { value: WEEK_DAYS.FRIDAY, label: "Thứ Sáu" },
+  { value: WEEK_DAYS.SATURDAY, label: "Thứ Bảy" },
+  { value: WEEK_DAYS.SUNDAY, label: "Chủ nhật" },
 ];
 
-export const WEEK_DAYS_DISPLAY: Record<string, string>= {
+export const WEEK_DAYS_DISPLAY: Record<string, string> = {
   MONDAY: "Thứ Hai",
   TUESDAY: "Thứ Ba",
   WEDNESDAY: "Thứ Tư",
   THURSDAY: "Thứ Năm",
   FRIDAY: "Thứ Sáu",
   SATURDAY: "Thứ Bảy",
-  SUNDAY: "Chủ nhật",
-}
+  SUNDAY: "Chủ Nhật",
+};
 
-export const WEEK_ORDER = WEEK_DAYS.map(d => d.value);
+export const WEEK_ORDER = WEEK_DAYS_OPTIONS.map((d) => d.value);

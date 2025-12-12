@@ -11,7 +11,6 @@ export const Colors = {
   text_primary: "#F3F4F6", // chữ sáng chính
   text_secondary: "#9CA3AF", // chữ phụ
   border: "#1F2937", // viền xám đậm
-  glow: "#6366F1", // hiệu ứng glow nhẹ quanh nút / icon
 };
 
 export const getGradientByPercent = (percent: number): readonly [string, string] => {
@@ -31,7 +30,7 @@ export const Fonts = {
 };
 
 export const FontSizes = {
-  smaill: 14,
+  small: 14,
   medium: 18,
   large: 24,
   extraLarge: 44,

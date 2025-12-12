@@ -1,5 +1,11 @@
-import { WEEK_DAYS, WEEK_ORDER } from "@/constants/medication";
+import {
+  WEEK_DAYS,
+  WEEK_DAYS_OPTIONS,
+  WEEK_ORDER,
+} from "@/constants/medication";
 import { AddReminderMedicationForm } from "@/schema/medicationSchema";
+import { Colors } from "@/styles/Common";
+import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useState } from "react";
 import { UseFormSetValue, useWatch } from "react-hook-form";
 import { Modal, Pressable, Text, View } from "react-native";
@@ -18,7 +24,7 @@ const CheckBoxDaysModal = ({
   setValue,
   control,
 }: Props) => {
-  const [tempDays, setTempDays] = useState<string[]>([]);
+  const [tempDays, setTempDays] = useState<WEEK_DAYS[]>([]);
   const daysOfWeek = useWatch({
     control,
     name: "days_of_week",
@@ -53,7 +59,7 @@ const CheckBoxDaysModal = ({
     <Modal visible={showWeekModal} transparent animationType="fade">
       <View style={styles.modalOverlay}>
         <View style={styles.modalBox}>
-          {WEEK_DAYS.map((d) => {
+          {WEEK_DAYS_OPTIONS.map((d) => {
             const selected = tempDays.includes(d.value);
 
             const handlePress = () => {
@@ -79,8 +85,15 @@ const CheckBoxDaysModal = ({
             );
           })}
 
-          <Pressable onPress={commitSelection} style={styles.modalCloseButton}>
-            <Text style={{ color: "#FFF", textAlign: "center" }}>Xong</Text>
+          <Pressable onPress={commitSelection}>
+            <LinearGradient
+              colors={[Colors.primary, Colors.primary_2]}
+              start={{ x: 0, y: 0.5 }}
+              end={{ x: 1, y: 0.5 }}
+              style={styles.modalCloseButton}
+            >
+              <Text style={{ color: "#FFF", textAlign: "center" }}>Xong</Text>
+            </LinearGradient>
           </Pressable>
         </View>
       </View>

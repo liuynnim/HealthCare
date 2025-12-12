@@ -1,13 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
-import { View, Text, ScrollView, Pressable } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import { SafeAreaView } from "react-native-safe-area-context";
 import GradientText from "@/components/GradientText";
 import { Colors } from "@/styles/Common";
 import { Ionicons } from "@expo/vector-icons";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
-import styles from "../../../styles/medicationReminder/styles";
+import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
+import React, { useEffect, useRef, useState } from "react";
+import { Pressable, ScrollView, Text, View } from "react-native";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { SafeAreaView } from "react-native-safe-area-context";
+import styles from "../../../styles/medicationReminder/styles";
 
 const generateDays = (centerDate: Date, range: number) => {
   return Array.from({ length: range }, (_, i) => {
@@ -16,7 +16,7 @@ const generateDays = (centerDate: Date, range: number) => {
 
     return {
       date: d,
-      label: d.getDate(),
+      label: `${d.getDate()}/${d.getMonth() + 1}`,
       weekday: d.toLocaleDateString("vi-VN", { weekday: "short" }),
     };
   });

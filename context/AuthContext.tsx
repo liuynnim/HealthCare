@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       await AsyncStorage.setItem(STORAGE_KEY.REFRESH_TOKEN, res.refreshToken);
       setIsLoggedIn(true)
       notify("Đăng nhập thành công", NotifyTypeEnum.SUCCESS);
-      router.replace("/(screen)/ImageDiagnosis");
+      router.replace("/(tabs)/ImageDiagnosis");
     },
   });
 

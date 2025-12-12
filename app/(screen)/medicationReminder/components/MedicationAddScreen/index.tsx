@@ -1,30 +1,68 @@
+import AddTimeModal from "@/components/Medication/AddTimeModal";
+import ScheduleCard from "@/components/Medication/ScheduleCard";
 import {
+  FREQUENCY,
   FREQUENCY_OPTIONS,
   UNIT_OPTIONS,
   WEEK_DAYS_DISPLAY,
 } from "@/constants/medication";
 import { medicationSchema } from "@/schema/medicationSchema";
+import {
+  getListDrug,
+  postSingleDrug,
+} from "@/services/api/medication/medication";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Picker } from "@react-native-picker/picker";
+import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
+import dayjs from "dayjs";
 import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Modal,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
+import CheckBoxDaysModal from "../../../../../components/Medication/CheckBoxDaysModal";
 import styles from "../../../../../styles/medicationReminder/MedicationAddScreen/styles";
-import CheckBoxDaysModal from "../../../../../components/CheckBoxDaysModal";
 
 export default function MedicationAddScreen() {
-  const [isStartDatePickerVisible, setStartDatePickerVisible] = useState(false);
-  const [isEndDatePickerVisible, setEndDatePickerVisible] = useState(false);
-  const [showWeekModal, setShowWeekModal] = useState(false);
-  const [isTimePickerVisible, setTimePickerVisible] = useState(false);
+  const [isStartDatePickerVisible, setStartDatePickerVisible] =
+    useState<boolean>(false);
+  const [isEndDatePickerVisible, setEndDatePickerVisible] =
+    useState<boolean>(false);
+  const [showWeekModal, setShowWeekModal] = useState<boolean>(false);
+  const [addTimeVisible, setAddTimeVisible] = useState<boolean>(false);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
+  /* ********** handle get drug list ********** */
+  const [open, setOpen] = useState(false);
+  const [keyword, setKeyword] = useState("");
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } =
+    useInfiniteQuery({
+      queryKey: ["drugs"],
+      queryFn: ({ pageParam }) => getListDrug(pageParam, ""),
+      initialPageParam: 0,
+      getNextPageParam: (lastPage: any) => {
+        if (!lastPage || lastPage.last === true) return undefined;
+        // pageNumber tiếp theo = lastPage.number + 1
+        return lastPage.number + 1;
+      },
+    });
+  /* ****************************************** */
   const {
     control,
     handleSubmit,
     setValue,
+    getValues,
     watch,
     formState: { errors },
   } = useForm({
@@ -35,12 +73,7 @@ export default function MedicationAddScreen() {
       start_date: new Date(),
       note: "",
       frequency_type: "DAILY",
-      schedules: [
-        {
-          time: "08:00",
-          dosage: 1,
-        },
-      ],
+      schedules: [],
       days_of_week: [],
     },
   });
@@ -50,10 +83,30 @@ export default function MedicationAddScreen() {
   const schedules = watch("schedules");
   const daysOfWeek = watch("days_of_week", []);
 
-  const onSubmit = (data: any) => {
-    console.log("FINAL FORM:", data);
-  };
+  const addMedication = useMutation({
+    mutationFn: (data: any) => postSingleDrug(data),
+    onSuccess: (data) => {
+      console.log(data);
+      router.back();
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
 
+  const onSubmit = (data: any) => {
+    const payload: any = {
+      ...data,
+      start_date: dayjs(data.startDate).format("YYYY-MM-DD"),
+      end_date: endDate ? dayjs(data.endDate).format("YYYY-MM-DD") : null,
+      interval_days: data.interval_days ? data.interval_days : null,
+    };
+    addMedication.mutate(payload);
+  };
+  const handleDeleteSchedule = (index: number) => {
+    const updated = schedules.filter((_, i) => i !== index);
+    setValue("schedules", updated);
+  };
   return (
     <LinearGradient
       colors={["#0D0D0D", "#111122", "#0F1125"]}
@@ -66,7 +119,7 @@ export default function MedicationAddScreen() {
           style={styles.scrollView}
           showsVerticalScrollIndicator={false}
         >
-          <Text style={styles.title}>Thêm thuốc</Text>
+          <Text style={styles.title}>Thêm lịch nhắc</Text>
 
           {/* ===================== TÊN THUỐC ===================== */}
           <View style={styles.inputContainer}>
@@ -76,13 +129,97 @@ export default function MedicationAddScreen() {
             <Controller
               control={control}
               name="drugName"
-              render={({ field: { onChange, value } }) => (
-                <TextInput
-                  style={styles.input}
-                  value={value}
-                  onChangeText={onChange}
-                />
-              )}
+              render={({ field: { onChange, value } }) => {
+                const drugPages = data?.pages ?? [];
+                const drugItems = drugPages.flatMap((p: any) => p.content);
+
+                return (
+                  <View style={{ marginBottom: 8 }}>
+                    {/* === INPUT VỪA SEARCH VỪA CHO NHẬP TỰ DO === */}
+                    <TextInput
+                      style={styles.selectBox}
+                      placeholder="Nhập hoặc chọn thuốc..."
+                      placeholderTextColor="#999"
+                      value={value}
+                      onChangeText={(text) => {
+                        onChange(text); // Cho phép nhập tên tùy ý
+                        setKeyword(text); // Dùng keyword để search API
+                        refetch(); // Reload danh sách
+                      }}
+                      onFocus={() => setOpen(true)} // Mở popup khi focus input
+                    />
+
+                    {/* === MODAL LỰA CHỌN THUỐC === */}
+                    <Modal visible={open} transparent animationType="fade">
+                      <View style={styles.modalOverlay}>
+                        <View style={styles.modalBox}>
+                          {/* Search bar đồng bộ UI */}
+                          <TextInput
+                            placeholder="Tìm thuốc..."
+                            placeholderTextColor="#8E8E8E"
+                            value={keyword}
+                            onChangeText={(t) => {
+                              setKeyword(t);
+                              onChange(t);
+                              refetch();
+                            }}
+                            style={[styles.input, { marginBottom: 12 }]}
+                          />
+
+                          {/* List thuốc */}
+                          <FlatList
+                            data={drugItems}
+                            keyExtractor={(item) => item.id.toString()}
+                            onEndReached={() => {
+                              if (hasNextPage && !isFetchingNextPage)
+                                fetchNextPage();
+                            }}
+                            onEndReachedThreshold={0.2}
+                            ListFooterComponent={
+                              isFetchingNextPage ? (
+                                <ActivityIndicator
+                                  style={{ marginVertical: 10 }}
+                                />
+                              ) : null
+                            }
+                            renderItem={({ item }) => (
+                              <Pressable
+                                style={styles.modalItem}
+                                onPress={() => {
+                                  onChange(item.name);
+                                  setOpen(false);
+                                }}
+                              >
+                                <Text style={styles.modalItemLabel}>
+                                  {item.name}
+                                </Text>
+                                {item.title ? (
+                                  <Text style={styles.modalItemSubLabel}>
+                                    {item.title}
+                                  </Text>
+                                ) : null}
+                              </Pressable>
+                            )}
+                          />
+
+                          <Pressable
+                            onPress={() => setOpen(false)}
+                            style={styles.modalCloseButton}
+                          >
+                            <Text style={styles.modalCloseText}>Đóng</Text>
+                          </Pressable>
+                        </View>
+                      </View>
+                    </Modal>
+
+                    {errors.drugName && (
+                      <Text style={styles.errorText}>
+                        {errors.drugName.message}
+                      </Text>
+                    )}
+                  </View>
+                );
+              }}
             />
             {errors.drugName && (
               <Text style={styles.errorText}>{errors.drugName.message}</Text>
@@ -176,7 +313,7 @@ export default function MedicationAddScreen() {
               </Text>
             )}
           </View>
-          {watch("frequency_type") === "WEEKLY" && (
+          {watch("frequency_type") === FREQUENCY.WEEKLY && (
             <View style={styles.inputContainer}>
               <Text style={styles.label}>
                 Chọn các ngày trong tuần{" "}
@@ -201,39 +338,100 @@ export default function MedicationAddScreen() {
               )}
             </View>
           )}
-          {/* ===================== THỜI GIAN UỐNG (schedule[0]) ===================== */}
-          <Pressable
-            onPress={() => setTimePickerVisible(true)}
-            style={styles.inputContainer}
-          >
-            <Text style={styles.label}>
-              Thời gian <Text style={styles.requiredMark}>*</Text>
-            </Text>
 
-            <Text style={[styles.input, { lineHeight: 50 }]}>
-              {schedules[0]?.time}
-            </Text>
-          </Pressable>
+          {watch("frequency_type") === FREQUENCY.INTERVAL && (
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>
+                Khoảng cách ngày <Text style={styles.requiredMark}>*</Text>
+              </Text>
+              <Controller
+                control={control}
+                name="interval_days"
+                render={({ field: { onChange, value } }) => (
+                  <TextInput
+                    style={styles.input}
+                    value={value ? String(value) : ""}
+                    onChangeText={(text) => {
+                      const numeric = text.replace(/[^0-9]/g, "");
+                      onChange(numeric);
+                    }}
+                    keyboardType="number-pad"
+                  />
+                )}
+              />
+              {errors.interval_days && (
+                <Text style={styles.errorText}>
+                  {errors.interval_days.message}
+                </Text>
+              )}
+            </View>
+          )}
 
-          {/* ===================== GHI CHÚ ===================== */}
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Ghi chú</Text>
+
             <Controller
               control={control}
               name="note"
               render={({ field: { onChange, value } }) => (
                 <TextInput
-                  style={[styles.input, { height: 100 }]}
+                  style={[
+                    styles.input,
+                    { height: 80, textAlignVertical: "top" },
+                  ]}
                   multiline
+                  numberOfLines={4}
+                  placeholder="Nhập ghi chú (nếu có)"
+                  placeholderTextColor="#999"
                   value={value}
                   onChangeText={onChange}
                 />
               )}
             />
+
+            {errors.note && (
+              <Text style={styles.errorText}>{errors.note.message}</Text>
+            )}
           </View>
 
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>
+              Thời gian
+              <Text style={styles.requiredMark}>*</Text>
+            </Text>
+
+            {schedules.length > 0
+              ? schedules.map((s, index) => (
+                  <ScheduleCard
+                    key={index}
+                    name={getValues("drugName")}
+                    time={s.time}
+                    dosage={s.dosage}
+                    mode="edit"
+                    onPress={() => {
+                      setEditingIndex(index);
+                      setAddTimeVisible(true);
+                    }}
+                    onDelete={() => handleDeleteSchedule(index)}
+                  />
+                ))
+              : null}
+            <Pressable
+              style={styles.secondaryButton}
+              onPress={() => setAddTimeVisible(true)}
+            >
+              <Text style={styles.secondaryButtonText}>+ Thêm giờ</Text>
+            </Pressable>
+            {errors.schedules && (
+              <Text style={styles.errorText}>{errors.schedules.message}</Text>
+            )}
+          </View>
           {/* ===================== LƯU ===================== */}
-          <Pressable style={styles.saveButton} onPress={handleSubmit(onSubmit)}>
+          <Pressable
+            style={styles.saveButton}
+            onPress={handleSubmit(onSubmit)}
+            disabled={addMedication.isPending}
+          >
             <Text style={styles.saveText}>Lưu</Text>
           </Pressable>
         </ScrollView>
@@ -262,27 +460,19 @@ export default function MedicationAddScreen() {
         locale="vi-VN"
       />
 
-      {/* ===================== TIME PICKER ===================== */}
-      <DateTimePickerModal
-        isVisible={isTimePickerVisible}
-        mode="time"
-        onConfirm={(value) => {
-          setTimePickerVisible(false);
-
-          const hh = value.getHours().toString().padStart(2, "0");
-          const mm = value.getMinutes().toString().padStart(2, "0");
-
-          setValue("schedules.0.time", `${hh}:${mm}`);
-        }}
-        onCancel={() => setTimePickerVisible(false)}
-        locale="vi-VN"
-      />
-
       <CheckBoxDaysModal
         showWeekModal={showWeekModal}
         setShowWeekModal={setShowWeekModal}
         setValue={setValue}
         control={control}
+      />
+
+      <AddTimeModal
+        visible={addTimeVisible}
+        setVisible={setAddTimeVisible}
+        schedules={schedules}
+        setValue={setValue}
+        editingIndex={editingIndex}
       />
     </LinearGradient>
   );
