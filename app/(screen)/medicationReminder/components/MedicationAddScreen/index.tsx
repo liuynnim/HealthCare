@@ -1,3 +1,4 @@
+import GradientText from "@/components/GradientText";
 import AddTimeModal from "@/components/Medication/AddTimeModal";
 import ScheduleCard from "@/components/Medication/ScheduleCard";
 import {
@@ -11,6 +12,8 @@ import {
   getListDrug,
   postSingleDrug,
 } from "@/services/api/medication/medication";
+import { Colors } from "@/styles/Common";
+import { Ionicons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Picker } from "@react-native-picker/picker";
 import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
@@ -119,7 +122,12 @@ export default function MedicationAddScreen() {
           style={styles.scrollView}
           showsVerticalScrollIndicator={false}
         >
-          <Text style={styles.title}>Thêm lịch nhắc</Text>
+          <GradientText
+            colors={["#8B5CF6", "#6366F1", "#06B6D4"]}
+            style={styles.title}
+          >
+            Thêm lịch nhắc
+          </GradientText>
 
           {/* ===================== TÊN THUỐC ===================== */}
           <View style={styles.inputContainer}>
@@ -239,11 +247,16 @@ export default function MedicationAddScreen() {
                   <Picker
                     selectedValue={value}
                     onValueChange={(val) => onChange(val)}
-                    style={{ color: "#FFF" }}
+                    style={[styles.textPicker, { color: "#FFF" }]}
                     dropdownIconColor="#FFF"
                   >
                     {UNIT_OPTIONS.map((u) => (
-                      <Picker.Item label={u.label} value={u.id} key={u.id} />
+                      <Picker.Item
+                        style={styles.textPicker}
+                        label={u.label}
+                        value={u.id}
+                        key={u.id}
+                      />
                     ))}
                   </Picker>
                 </View>
@@ -293,11 +306,12 @@ export default function MedicationAddScreen() {
                   <Picker
                     selectedValue={value}
                     onValueChange={onChange}
-                    style={{ color: "#FFF" }}
+                    style={[styles.textPicker, { color: "#FFF" }]}
                     dropdownIconColor="#FFF"
                   >
                     {FREQUENCY_OPTIONS.map((item) => (
                       <Picker.Item
+                        style={styles.textPicker}
                         key={item.value}
                         label={item.label}
                         value={item.value}
@@ -406,6 +420,7 @@ export default function MedicationAddScreen() {
                     key={index}
                     name={getValues("drugName")}
                     time={s.time}
+                    unit={watch("unit_id")}
                     dosage={s.dosage}
                     mode="edit"
                     onPress={() => {
@@ -417,10 +432,18 @@ export default function MedicationAddScreen() {
                 ))
               : null}
             <Pressable
-              style={styles.secondaryButton}
-              onPress={() => setAddTimeVisible(true)}
+              onPress={() => {
+                setEditingIndex(null);
+                setAddTimeVisible(true);
+              }}
+              style={styles.addTimeCard}
             >
-              <Text style={styles.secondaryButtonText}>+ Thêm giờ</Text>
+              <Ionicons
+                name="add-circle-outline"
+                size={22}
+                color={Colors.primary_2}
+              />
+              <Text style={styles.addTimeCardText}>Thêm giờ uống</Text>
             </Pressable>
             {errors.schedules && (
               <Text style={styles.errorText}>{errors.schedules.message}</Text>
@@ -428,11 +451,18 @@ export default function MedicationAddScreen() {
           </View>
           {/* ===================== LƯU ===================== */}
           <Pressable
-            style={styles.saveButton}
+            style={styles.saveButtonContainer}
             onPress={handleSubmit(onSubmit)}
             disabled={addMedication.isPending}
           >
-            <Text style={styles.saveText}>Lưu</Text>
+            <LinearGradient
+              colors={[Colors.primary, Colors.primary_2]}
+              start={{ x: 0, y: 0.5 }}
+              end={{ x: 1, y: 0.5 }}
+              style={styles.saveButton}
+            >
+              <Text style={styles.saveText}>Lưu</Text>
+            </LinearGradient>
           </Pressable>
         </ScrollView>
       </SafeAreaView>
@@ -471,6 +501,7 @@ export default function MedicationAddScreen() {
         visible={addTimeVisible}
         setVisible={setAddTimeVisible}
         schedules={schedules}
+        unit={watch("unit_id")}
         setValue={setValue}
         editingIndex={editingIndex}
       />

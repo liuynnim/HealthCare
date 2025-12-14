@@ -2,7 +2,7 @@
 import { Colors } from "@/styles/Common";
 import { StyleSheet } from "react-native";
 
-const healthStyles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
@@ -61,7 +61,6 @@ const healthStyles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#FFF",
     overflow: "hidden",
-      
   },
 
   progressBarFill: {
@@ -214,6 +213,35 @@ const healthStyles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
+  /* ===== FOOD ACTION ===== */
+  foodActionCard: {
+    marginTop: 16,
+    marginBottom: 6,
+    padding: 16,
+    borderRadius: 16,
+    backgroundColor: Colors.card,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  },
+
+  foodTextWrapper: {
+    flex: 1,
+  },
+
+  foodTitle: {
+    color: Colors.text_primary,
+    fontSize: 16,
+    fontWeight: "600",
+  },
+
+  foodDesc: {
+    color: Colors.text_secondary,
+    fontSize: 13,
+    marginTop: 2,
+  },
 });
 
-export default healthStyles;
+export default styles;

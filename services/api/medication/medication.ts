@@ -18,3 +18,14 @@ export async function getListDrug(page: number, keyword: string) {
   });
   return response;
 }
+
+//get list prescriptions
+
+export async function getListPrescriptions(date: string) {
+  const response = await axiosInstance.get("/prescriptions/schedules", {
+    params: {
+      date,
+    },
+  });
+  return response;
+}

@@ -5,6 +5,13 @@ export const UNIT_OPTIONS = [
   { id: 4, label: "Thể tích (ml)" },
 ];
 
+export const UNIT_DISPLAY: Record<number, string> = {
+  1: "Viên",
+  2: "Gói",
+  3: "Ống",
+  4: "Thể tích (ml)",
+};
+
 export const enum FREQUENCY {
   DAILY = "DAILY",
   WEEKLY = "WEEKLY",

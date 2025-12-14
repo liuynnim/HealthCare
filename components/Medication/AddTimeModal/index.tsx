@@ -1,7 +1,18 @@
+import { UNIT_DISPLAY } from "@/constants/medication";
 import { AddReminderMedicationForm } from "@/schema/medicationSchema";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import { Colors, Fonts, FontSizes } from "@/styles/Common";
+import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { UseFormSetValue } from "react-hook-form";
-import { Modal, View, Text, Pressable, TextInput } from "react-native";
+import {
+  Modal,
+  View,
+  Text,
+  Pressable,
+  TextInput,
+  StyleSheet,
+} from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 type Props = {
@@ -9,7 +20,8 @@ type Props = {
   setVisible: Dispatch<SetStateAction<boolean>>;
   setValue: UseFormSetValue<AddReminderMedicationForm>;
   schedules: { time: string; dosage: number }[];
-  editingIndex: number | null; // được truyền từ ngoài vào
+  editingIndex: number | null;
+  unit: number;
 };
 
 export default function AddTimeModal({
@@ -18,140 +30,203 @@ export default function AddTimeModal({
   schedules,
   setValue,
   editingIndex,
+  unit,
 }: Props) {
   const isEditing = editingIndex !== null;
-
   const [timePickerVisible, setTimePickerVisible] = useState(false);
 
-  // STATE bên trong modal
-  const [time, setTime] = useState<string>("08:00");
-  const [dosage, setDosage] = useState<string>("1");
+  const [time, setTime] = useState("08:00");
+  const [dosage, setDosage] = useState("1");
 
-  const openTimePicker = () => setTimePickerVisible(true);
+  /** Load data khi edit */
+  useEffect(() => {
+    if (isEditing && editingIndex !== null && schedules?.[editingIndex]) {
+      setTime(schedules[editingIndex].time);
+      setDosage(String(schedules[editingIndex].dosage));
+    }
+  }, [editingIndex, schedules]);
 
-  const resetAndClose = () => {
+  const close = () => {
     setVisible(false);
     setTime("08:00");
     setDosage("1");
   };
 
   const handleSave = () => {
-    const newItem = {
-      time,
-      dosage: Number(dosage),
-    };
+    const updated = Array.isArray(schedules) ? [...schedules] : [];
+    const item = { time, dosage: Number(dosage) };
 
-    let updated = [...schedules];
-
-    if (isEditing) {
-      // UPDATE
-      updated[editingIndex!] = newItem;
+    if (isEditing && editingIndex !== null) {
+      updated[editingIndex] = item;
     } else {
-      // ADD NEW
-      updated.push(newItem);
+      updated.push(item);
     }
 
     setValue("schedules", updated);
-    resetAndClose();
+    close();
   };
 
   return (
     <Modal transparent visible={visible} animationType="fade">
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: "rgba(0,0,0,0.5)",
-          justifyContent: "center",
-        }}
-      >
-        <View
-          style={{
-            margin: 20,
-            padding: 20,
-            backgroundColor: "#222",
-            borderRadius: 12,
-          }}
-        >
-          <Text style={{ color: "#fff", fontSize: 18, marginBottom: 10 }}>
-            {isEditing ? "Chỉnh sửa thời gian" : "Thêm thời gian uống"}
+      <View style={styles.overlay}>
+        <View style={styles.card}>
+          {/* ===== HEADER ===== */}
+          <Text style={styles.title}>
+            {isEditing ? "Chỉnh sửa giờ uống" : "Thêm giờ uống thuốc"}
           </Text>
 
-          {/* TIME */}
+          {/* ===== TIME ===== */}
           <Pressable
-            onPress={openTimePicker}
-            style={{
-              padding: 12,
-              borderRadius: 8,
-              backgroundColor: "#333",
-              marginBottom: 12,
-            }}
+            style={styles.timeCard}
+            onPress={() => setTimePickerVisible(true)}
           >
-            <Text style={{ color: "#fff" }}>Giờ: {time}</Text>
+            <Ionicons name="time-outline" size={22} color={Colors.primary_2} />
+            <Text style={styles.timeText}>{time}</Text>
           </Pressable>
 
-          {/* DOSAGE */}
-          <TextInput
-            style={{
-              backgroundColor: "#333",
-              borderRadius: 8,
-              padding: 12,
-              color: "#fff",
-              marginBottom: 12,
-            }}
-            keyboardType="numeric"
-            value={dosage}
-            onChangeText={(text) => {
-              const clean = text.replace(/[^0-9.]/g, "");
-              setDosage(clean);
-            }}
-            placeholder="Liều lượng"
-            placeholderTextColor="#666"
-          />
+          {/* ===== DOSAGE ===== */}
+          <View style={styles.inputWrapper}>
+            <Ionicons
+              name="medkit-outline"
+              size={20}
+              color={Colors.text_secondary}
+            />
+            <TextInput
+              value={dosage}
+              keyboardType="numeric"
+              onChangeText={(t) => setDosage(t.replace(/[^0-9]/g, ""))}
+              style={styles.input}
+              placeholder="Liều lượng"
+              placeholderTextColor={Colors.text_secondary}
+            />
+            <Text style={styles.unit}>{UNIT_DISPLAY[unit]}</Text>
+          </View>
 
-          {/* ACTION BUTTONS */}
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginTop: 15,
-            }}
-          >
-            <Pressable
-              onPress={resetAndClose}
-              style={{ padding: 10, paddingHorizontal: 20 }}
-            >
-              <Text style={{ color: "#ccc" }}>Hủy</Text>
+          {/* ===== ACTIONS ===== */}
+          <View style={styles.actions}>
+            <Pressable onPress={close}>
+              <Text style={styles.cancelText}>Hủy</Text>
             </Pressable>
 
-            <Pressable
-              onPress={handleSave}
-              style={{
-                padding: 10,
-                paddingHorizontal: 20,
-                backgroundColor: "#4da6ff",
-                borderRadius: 8,
-              }}
-            >
-              <Text style={{ color: "#fff" }}>
-                {isEditing ? "Lưu" : "Thêm"}
-              </Text>
+            <Pressable onPress={handleSave}>
+              <LinearGradient
+                colors={[Colors.primary, Colors.primary_2]}
+                start={{ x: 0, y: 0.5 }}
+                end={{ x: 1, y: 0.5 }}
+                style={styles.saveBtn}
+              >
+                <Text style={styles.saveText}>
+                  {isEditing ? "Lưu" : "Thêm"}
+                </Text>
+              </LinearGradient>
             </Pressable>
           </View>
         </View>
       </View>
 
-      {/* TIME PICKER */}
+      {/* ===== TIME PICKER ===== */}
       <DateTimePickerModal
         isVisible={timePickerVisible}
         mode="time"
-        onConfirm={(value) => {
-          const hh = value.getHours().toString().padStart(2, "0");
-          const mm = value.getMinutes().toString().padStart(2, "0");
+        onConfirm={(d) => {
+          const hh = String(d.getHours()).padStart(2, "0");
+          const mm = String(d.getMinutes()).padStart(2, "0");
           setTime(`${hh}:${mm}`);
           setTimePickerVisible(false);
         }}
         onCancel={() => setTimePickerVisible(false)}
+        locale="vi-VN"
       />
     </Modal>
   );
 }
+
+const styles = StyleSheet.create({
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.65)",
+    justifyContent: "center",
+    padding: 20,
+  },
+
+  card: {
+    backgroundColor: Colors.card,
+    borderRadius: 20,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+
+  title: {
+    fontFamily: Fonts.bold,
+    fontSize: FontSizes.large,
+    color: Colors.text_primary,
+    marginBottom: 16,
+  },
+
+  /* Time */
+  timeCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    backgroundColor: "#262626",
+    padding: 14,
+    borderRadius: 14,
+    marginBottom: 14,
+  },
+
+  timeText: {
+    fontFamily: Fonts.medium,
+    fontSize: 18,
+    color: Colors.text_primary,
+  },
+
+  /* Dosage */
+  inputWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#262626",
+    borderRadius: 14,
+    paddingHorizontal: 14,
+    height: 50,
+    gap: 8,
+    marginBottom: 20,
+  },
+
+  input: {
+    flex: 1,
+    color: Colors.text_primary,
+    fontFamily: Fonts.regular,
+    fontSize: FontSizes.medium,
+  },
+
+  unit: {
+    color: Colors.text_secondary,
+    fontSize: FontSizes.small,
+  },
+
+  /* Actions */
+  actions: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+
+  cancelText: {
+    color: Colors.text_secondary,
+    fontSize: FontSizes.medium,
+    fontFamily: Fonts.regular,
+  },
+
+  saveBtn: {
+    paddingHorizontal: 26,
+    paddingVertical: 12,
+    borderRadius: 30,
+  },
+
+  saveText: {
+    color: "#FFF",
+    fontSize: FontSizes.medium,
+    fontFamily: Fonts.medium,
+  },
+});

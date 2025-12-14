@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.background,
     paddingHorizontal: 20,
-    paddingTop: 10,
+    padding: 10,
   },
 
   scrollView: {
@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: FontSizes.extraLarge,
+    fontSize: FontSizes.large,
     fontFamily: Fonts.bold,
     color: Colors.primary,
     marginBottom: 26,
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
 
   label: {
     fontFamily: Fonts.medium,
-    fontSize: FontSizes.small,
+    fontSize: FontSizes.medium,
     color: Colors.text_secondary,
     marginBottom: 6,
   },
@@ -45,6 +45,13 @@ const styles = StyleSheet.create({
   requiredMark: {
     color: "#FF4D4F",
     fontSize: FontSizes.small,
+    fontFamily: Fonts.regular,
+  },
+
+  textPicker: {
+    color: "#000",
+    fontFamily: Fonts.regular,
+    fontSize: FontSizes.medium,
   },
 
   errorText: {
@@ -61,6 +68,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingHorizontal: 16,
     justifyContent: "center",
+    fontFamily: Fonts.regular,
+    fontSize: FontSizes.medium,
+    color: Colors.text_primary,
   },
 
   /* Modal overlay */
@@ -100,11 +110,14 @@ const styles = StyleSheet.create({
   },
 
   modalCloseButton: {
-    backgroundColor: "#333",
-    paddingVertical: 12,
-    borderRadius: 10,
+    marginTop: 16,
+    height: 48,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: Colors.border,
     alignItems: "center",
-    marginTop: 14,
+    justifyContent: "center",
+    backgroundColor: Colors.card,
   },
 
   modalCloseText: {
@@ -114,36 +127,41 @@ const styles = StyleSheet.create({
   },
 
   /* Secondary button */
-  secondaryButton: {
-    marginTop: 10,
-    paddingVertical: 12,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: Colors.border,
+  addTimeCard: {
+    marginTop: 12,
+    height: 50,
+    borderRadius: 14,
+    borderWidth: 1.5,
+    borderStyle: "dashed",
+    borderColor: Colors.primary_2,
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#222", // subtle dark background
+    gap: 6,
+    backgroundColor: "rgba(6,182,212,0.08)", // primary_2 overlay
   },
 
-  secondaryButtonText: {
-    color: Colors.text_primary,
+  addTimeCardText: {
+    color: Colors.primary_2,
     fontFamily: Fonts.medium,
     fontSize: FontSizes.medium,
   },
 
   /* Save button */
   saveButton: {
-    backgroundColor: Colors.primary,
     paddingVertical: 15,
     borderRadius: 28,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 30,
+  },
+
+  saveButtonContainer: {
+    marginVertical: 30,
   },
 
   saveText: {
-    color: "black",
-    fontSize: 18,
+    color: "#FFF",
+    fontSize: FontSizes.medium,
     fontFamily: Fonts.medium,
     width: "100%",
     textAlign: "center",
