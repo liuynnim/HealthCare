@@ -1,32 +1,44 @@
 import GradientText from "@/components/GradientText";
-import { Colors } from "@/styles/Common";
+import { Colors, FontSizes } from "@/styles/Common";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { Linking, Pressable, ScrollView, Text, View } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "../../../styles/medicationReminder/styles";
+import MedicationActionModal from "../../../components/Medication/MedicationActionModal";
+import ScheduleCard from "@/components/Medication/ScheduleCard";
+import { useNotificationPermission } from "@/hook/useNotificationPermission";
+import { getListPrescriptions } from "@/services/api/medication/medication";
+import dayjs, { Dayjs } from "dayjs";
+import { useQuery } from "@tanstack/react-query";
+import { MedicationSchedule } from "@/app/types/medication";
+import { syncMedicationNotifications } from "@/hook/notification/notificationService";
 
-const generateDays = (centerDate: Date, range: number) => {
+const generateDays = (centerDate: Dayjs, range: number) => {
   return Array.from({ length: range }, (_, i) => {
-    const d = new Date(centerDate);
-    d.setDate(centerDate.getDate() - Math.floor(range / 2) + i);
+    const d = centerDate.subtract(Math.floor(range / 2), "day").add(i, "day");
 
     return {
-      date: d,
-      label: `${d.getDate()}/${d.getMonth() + 1}`,
-      weekday: d.toLocaleDateString("vi-VN", { weekday: "short" }),
+      date: d, // Dayjs
+      label: d.format("DD/MM"),
+      weekday: d.locale("vi").format("ddd"),
     };
   });
 };
 
 export default function MedicationReminderScreen() {
-  const today = new Date();
-  const [selectedDay, setSelectedDay] = useState<Date>(today);
+  // xin quyền hệ thống
+  const { status, requestPermission } = useNotificationPermission();
+
+  const [actionVisible, setActionVisible] = useState(false);
+
+  const today = dayjs();
+  const [selectedDay, setSelectedDay] = useState<Dayjs>(today);
+  const [days, setDays] = useState(() => generateDays(today, 14));
   const dayScrollRef = useRef<ScrollView>(null);
-  const [days, setDays] = useState(generateDays(today, 14));
   // 14 ngày quanh hôm nay
   useEffect(() => {
     setDays(generateDays(selectedDay, 14));
@@ -38,13 +50,13 @@ export default function MedicationReminderScreen() {
   const hideDatePicker = () => setDatePickerVisible(false);
 
   const handleDatePicked = (date: Date) => {
-    setSelectedDay(date);
+    setSelectedDay(dayjs(date));
     hideDatePicker();
   };
 
   useEffect(() => {
-    const selectedIndex = days.findIndex(
-      (d) => d.date.toDateString() === selectedDay.toDateString()
+    const selectedIndex = days.findIndex((d) =>
+      selectedDay.isSame(d.date, "day")
     );
 
     if (selectedIndex !== -1 && dayScrollRef.current) {
@@ -54,18 +66,56 @@ export default function MedicationReminderScreen() {
     }
   }, [selectedDay, days]);
 
-  // Fake list thuốc
-  const medicineList = [
-    { name: "Paracetamol 500mg", time: "08:00", dose: "1 viên" },
-    { name: "Vitamin C", time: "12:00", dose: "1 viên" },
-    { name: "Hạ sốt", time: "20:00", dose: "2 viên" },
-    { name: "Paracetamol 500mg", time: "08:00", dose: "1 viên" },
-    { name: "Vitamin C", time: "12:00", dose: "1 viên" },
-    { name: "Hạ sốt", time: "20:00", dose: "2 viên" },
-    { name: "Paracetamol 500mg", time: "08:00", dose: "1 viên" },
-    { name: "Vitamin C", time: "12:00", dose: "1 viên" },
-    { name: "Hạ sốt", time: "20:00", dose: "2 viên" },
-  ];
+  const { data, isLoading } = useQuery({
+    queryKey: ["prescriptions", selectedDay],
+    queryFn: () => getListPrescriptions(selectedDay.format("YYYY-MM-DD")),
+  });
+  const medicineList: MedicationSchedule[] = data ?? [];
+
+  useEffect(() => {
+    if (medicineList?.length) {
+      syncMedicationNotifications(medicineList);
+    }
+  }, [medicineList]);
+
+  if (status === "denied") {
+    return (
+      <LinearGradient
+        colors={["#0D0D0D", "#111122", "#0F1125"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0.5, y: 1 }}
+        style={styles.container}
+      >
+        <SafeAreaView
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <Text
+            style={{
+              color: "#FFF",
+              textAlign: "center",
+              fontSize: FontSizes.large,
+            }}
+          >
+            Ứng dụng cần quyền thông báo để nhắc bạn uống thuốc đúng giờ
+          </Text>
+
+          <Pressable onPress={() => Linking.openSettings()}>
+            <Text style={{ color: Colors.primary, marginTop: 16 }}>
+              Mở cài đặt
+            </Text>
+          </Pressable>
+        </SafeAreaView>
+      </LinearGradient>
+    );
+  }
+  const handleAddMedication = async () => {
+    if (status !== "granted") {
+      const granted = await requestPermission();
+      if (!granted) return;
+    }
+
+    router.push("/(screen)/medicationReminder/components/MedicationAddScreen");
+  };
 
   return (
     <LinearGradient
@@ -103,14 +153,13 @@ export default function MedicationReminderScreen() {
                 onPress={() => setSelectedDay(d.date)}
                 style={[
                   styles.dayItem,
-                  selectedDay.toDateString() === d.date.toDateString() &&
-                    styles.dayItemActive,
+                  selectedDay.isSame(d.date, "day") && styles.dayItemActive,
                 ]}
               >
                 <Text
                   style={[
                     styles.dayWeekText,
-                    selectedDay.toDateString() === d.date.toDateString() &&
+                    selectedDay.isSame(d.date, "day") &&
                       styles.dayWeekTextActive,
                   ]}
                 >
@@ -120,8 +169,7 @@ export default function MedicationReminderScreen() {
                 <Text
                   style={[
                     styles.dayNumber,
-                    selectedDay.toDateString() === d.date.toDateString() &&
-                      styles.dayNumberActive,
+                    selectedDay.isSame(d.date, "day") && styles.dayNumberActive,
                   ]}
                 >
                   {d.label}
@@ -136,7 +184,7 @@ export default function MedicationReminderScreen() {
           </ScrollView>
 
           {/* ADD BUTTON */}
-          <Pressable style={styles.addButton} onPress={() => router.push("/(screen)/medicationReminder/components/MedicationAddScreen")}>
+          <Pressable style={styles.addButton} onPress={handleAddMedication}>
             <LinearGradient
               colors={[Colors.primary, Colors.primary_2]}
               start={{ x: 0, y: 0.5 }}
@@ -154,27 +202,22 @@ export default function MedicationReminderScreen() {
             contentContainerStyle={styles.listContent}
             showsVerticalScrollIndicator={false}
           >
-            {medicineList.map((item, index) => (
-              <View key={index} style={styles.medicineCard}>
-                <View style={styles.medicineInfo}>
-                  <Ionicons
-                    name="medkit-outline"
-                    size={30}
-                    color={Colors.primary_2}
-                    style={{ marginRight: 12 }}
-                  />
-                  <View>
-                    <Text style={styles.medName}>{item.name}</Text>
-                    <Text style={styles.medDose}>{item.dose}</Text>
-                  </View>
-                </View>
-
-                <View style={styles.timeBadge}>
-                  <Ionicons name="time-outline" size={18} color="#fff" />
-                  <Text style={styles.timeText}>{item.time}</Text>
-                </View>
-              </View>
-            ))}
+            {isLoading ? (
+              <Text>Đang tải...</Text>
+            ) : medicineList.length > 0 ? (
+              medicineList.map((item) => (
+                <ScheduleCard
+                  key={item.scheduleId}
+                  name={item.drugName}
+                  time={item.time}
+                  dosage={item.dosage}
+                  unit={item.unitName ?? "Viên"}
+                  onPress={() => setActionVisible(true)}
+                />
+              ))
+            ) : (
+              <Text>Không có lịch uống thuốc cho ngày này</Text>
+            )}
           </ScrollView>
         </View>
 
@@ -185,6 +228,18 @@ export default function MedicationReminderScreen() {
           onConfirm={handleDatePicked}
           onCancel={hideDatePicker}
           locale="vi-VN"
+        />
+
+        {/* ACTION MODAL */}
+        <MedicationActionModal
+          visible={actionVisible}
+          onClose={() => setActionVisible(false)}
+          name="Paracetamol 500mg"
+          time="08:00"
+          dosage="1 viên"
+          onEdit={() => {}}
+          onPause={() => {}}
+          onDelete={() => {}}
         />
       </SafeAreaView>
     </LinearGradient>

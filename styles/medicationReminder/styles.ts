@@ -46,14 +46,14 @@ const styles = StyleSheet.create({
   dayScroll: {
     width: "100%",
     marginBottom: 14,
-    maxHeight: 60
+    maxHeight: 66
   },
 
   dayItem: {
     height:60,
     width: 60,
-    paddingVertical: 8,
-    paddingHorizontal: 8,
+    paddingVertical: 4,
+    paddingHorizontal: 4,
     alignItems: "center",
     borderRadius: 14,
     marginRight: 10,
@@ -119,51 +119,6 @@ const styles = StyleSheet.create({
 
   listContent: {
     paddingBottom: 32,
-  },
-
-  medicineCard: {
-    backgroundColor: Colors.card,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: Colors.border,
-    padding: 16,
-    marginBottom: 14,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-
-  medicineInfo: {
-    flexDirection: "row",
-    alignItems: "center",
-    maxWidth: "65%",
-  },
-
-  medName: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: Colors.text_primary,
-  },
-
-  medDose: {
-    color: Colors.text_secondary,
-    fontSize: 14,
-    marginTop: 4,
-  },
-
-  timeBadge: {
-    backgroundColor: Colors.primary,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 10,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-
-  timeText: {
-    color: "#fff",
-    marginLeft: 6,
-    fontWeight: "600",
   },
 });
 

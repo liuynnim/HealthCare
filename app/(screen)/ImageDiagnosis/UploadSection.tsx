@@ -81,7 +81,8 @@ const UploadSection: React.FC<Props> = ({
         response?.message || "Phân tích thành công",
         NotifyTypeEnum.SUCCESS
       );
-      setData(response);
+      console.log(response);
+      // setData(response);
     },
     onError: (error: any) => {
       notify(error.message || "Lỗi kết nối máy chủ", NotifyTypeEnum.ERROR);

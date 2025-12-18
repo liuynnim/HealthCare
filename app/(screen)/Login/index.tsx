@@ -6,18 +6,28 @@ import { Ionicons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "../../../styles/login/styles";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { STORAGE_KEY } from "@/constants/common";
+
+const getSavedLogin = async (): Promise<{
+  username: string;
+  password: string;
+} | null> => {
+  const raw = await AsyncStorage.getItem(STORAGE_KEY.SAVED_LOGIN);
+  return raw ? JSON.parse(raw) : null;
+};
 
 const LoginScreen = () => {
   const [isVisible, setIsVisible] = useState(false);
   const { login, loginLoading } = useAuth();
   const router = useRouter();
 
-  const { control, handleSubmit } = useForm<LoginFormData>({
+  const { control, handleSubmit, setValue } = useForm<LoginFormData>({
     resolver: zodResolver(LoginSchema),
     mode: "onBlur",
     defaultValues: {
@@ -25,6 +35,16 @@ const LoginScreen = () => {
       password: "",
     },
   });
+
+  useEffect(() => {
+    (async () => {
+      const saved = await getSavedLogin();
+      if (saved) {
+        setValue("email", saved.username);
+        setValue("password", saved.password);
+      }
+    })();
+  }, []);
 
   const handleLogin = (payload: LoginFormData) => {
     login(payload);

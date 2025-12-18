@@ -48,12 +48,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const getMe = useMutation({
     mutationFn: (payload: LoginFormData) => postLogin(payload),
-    onSuccess: async (res: any) => {
+    onSuccess: async (res: any, payload) => {
       await AsyncStorage.setItem(STORAGE_KEY.ACCESS_TOKEN, res.accessToken);
       await AsyncStorage.setItem(STORAGE_KEY.REFRESH_TOKEN, res.refreshToken);
-      setIsLoggedIn(true)
+      await AsyncStorage.setItem(
+        STORAGE_KEY.SAVED_LOGIN,
+        JSON.stringify({
+          username: payload.email,
+          password: payload.password,
+        })
+      );
+      setIsLoggedIn(true);
       notify("Đăng nhập thành công", NotifyTypeEnum.SUCCESS);
       router.replace("/(tabs)/ImageDiagnosis");
+    },
+    onError: (error: any) => {
+      notify(
+        error.response?.data?.message || "Đăng nhập thất bại",
+        NotifyTypeEnum.ERROR
+      );
     },
   });
 
@@ -68,7 +81,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, isLoading, login, logout, loginLoading: getMe.isPending}}>
+    <AuthContext.Provider
+      value={{
+        isLoggedIn,
+        isLoading,
+        login,
+        logout,
+        loginLoading: getMe.isPending,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

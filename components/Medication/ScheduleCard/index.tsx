@@ -9,7 +9,7 @@ export type ScheduleCardMode = "edit" | "view";
 type Props = {
   name: string;
   time: string;
-  unit: number;
+  unit: string;
   dosage: number;
   mode?: ScheduleCardMode;
   onPress?: () => void;
@@ -26,8 +26,11 @@ export default function ScheduleCard({
   onDelete,
 }: Props) {
   return (
-    <Pressable onPress={onPress} style={styles.container}>
-      {/* LEFT: Info (icon + medicine text) */}
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [styles.container, pressed && { opacity: 0.9 }]}
+    >
+      {/* LEFT: icon + info */}
       <View style={styles.leftContainer}>
         <Ionicons
           name="medkit-outline"
@@ -36,26 +39,26 @@ export default function ScheduleCard({
           style={styles.icon}
         />
 
-        <View style={{ flex: 1, marginRight: 5 }}>
-          <Text style={styles.infoText}>{name ? name : "Tên thuốc"}</Text>
+        <View style={styles.textWrapper}>
+          <Text style={styles.medName} numberOfLines={2}>
+            {name || "Tên thuốc"}
+          </Text>
 
-          <Text style={styles.infoText}>
-            {UNIT_DISPLAY[unit]}: {dosage}
+          <Text style={styles.medDose}>
+            {dosage} {unit}
           </Text>
         </View>
       </View>
 
-      {/* RIGHT: Time badge + delete */}
+      {/* RIGHT: time + delete */}
       <View style={styles.rightContainer}>
-        {/* Time badge */}
         <View style={styles.timeBadge}>
           <Ionicons name="time-outline" size={16} color="#FFF" />
           <Text style={styles.timeText}>{time}</Text>
         </View>
 
-        {/* Delete button (only in edit mode) */}
         {mode === "edit" && (
-          <Pressable onPress={onDelete}>
+          <Pressable onPress={onDelete} hitSlop={10} style={styles.deleteBtn}>
             <Ionicons name="trash-outline" size={22} color="#FF6666" />
           </Pressable>
         )}
@@ -66,45 +69,70 @@ export default function ScheduleCard({
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: Colors.card,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: Colors.border,
     padding: 14,
-    borderRadius: 14,
-    backgroundColor: "#1C1C2E",
     marginBottom: 14,
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
+    justifyContent: "space-between",
   },
+
+  /* LEFT */
   leftContainer: {
     flexDirection: "row",
     alignItems: "center",
-    flex: 3 / 5,
+    flex: 1,
+    marginRight: 10,
   },
+
   icon: {
     marginRight: 12,
   },
-  infoText: {
-    color: "#FFF",
-    fontSize: FontSizes.medium,
-    fontFamily: Fonts.medium,
-    flexWrap: "wrap",
+
+  textWrapper: {
+    flex: 1,
   },
+
+  medName: {
+    fontFamily: Fonts.medium,
+    fontSize: FontSizes.medium,
+    color: Colors.text_primary,
+  },
+
+  medDose: {
+    fontFamily: Fonts.regular,
+    fontSize: FontSizes.small,
+    color: Colors.text_secondary,
+    marginTop: 4,
+  },
+
+  /* RIGHT */
   rightContainer: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 12,
-    flex: 2 / 5,
+    gap: 10,
   },
+
   timeBadge: {
     flexDirection: "row",
-    backgroundColor: Colors.primary_2,
+    alignItems: "center",
+    backgroundColor: Colors.primary,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 20,
-    alignItems: "center",
-    gap: 6,
   },
+
   timeText: {
-    color: "#FFF",
+    marginLeft: 6,
     fontFamily: Fonts.medium,
+    fontSize: FontSizes.medium,
+    color: "#FFF",
+  },
+
+  deleteBtn: {
+    padding: 4,
   },
 });

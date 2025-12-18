@@ -14,9 +14,10 @@ export async function getListDrug(page: number, keyword: string) {
   const response = await axiosInstance.get("/drugs", {
     params: {
       page,
+      q: keyword,
     },
   });
-  return response;
+  return response.data;
 }
 
 //get list prescriptions
@@ -27,5 +28,5 @@ export async function getListPrescriptions(date: string) {
       date,
     },
   });
-  return response;
+  return response.data;
 }

@@ -51,8 +51,8 @@ export default function MedicationAddScreen() {
   const [keyword, setKeyword] = useState("");
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } =
     useInfiniteQuery({
-      queryKey: ["drugs"],
-      queryFn: ({ pageParam }) => getListDrug(pageParam, ""),
+      queryKey: ["drugs", keyword],
+      queryFn: ({ pageParam }) => getListDrug(pageParam, keyword),
       initialPageParam: 0,
       getNextPageParam: (lastPage: any) => {
         if (!lastPage || lastPage.last === true) return undefined;

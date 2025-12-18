@@ -2,14 +2,14 @@ export const UNIT_OPTIONS = [
   { id: 1, label: "Viên" },
   { id: 2, label: "Gói" },
   { id: 3, label: "Ống" },
-  { id: 4, label: "Thể tích (ml)" },
+  { id: 4, label: "ml" },
 ];
 
 export const UNIT_DISPLAY: Record<number, string> = {
   1: "Viên",
   2: "Gói",
   3: "Ống",
-  4: "Thể tích (ml)",
+  4: "ml",
 };
 
 export const enum FREQUENCY {
@@ -55,3 +55,17 @@ export const WEEK_DAYS_DISPLAY: Record<string, string> = {
 };
 
 export const WEEK_ORDER = WEEK_DAYS_OPTIONS.map((d) => d.value);
+
+export const WEEKDAY_MAP: Record<WEEK_DAYS, number> = {
+  [WEEK_DAYS.SUNDAY]: 1,
+  [WEEK_DAYS.MONDAY]: 2,
+  [WEEK_DAYS.TUESDAY]: 3,
+  [WEEK_DAYS.WEDNESDAY]: 4,
+  [WEEK_DAYS.THURSDAY]: 5,
+  [WEEK_DAYS.FRIDAY]: 6,
+  [WEEK_DAYS.SATURDAY]: 7,
+};
+
+export const mapWeekDayToNumber = (day: WEEK_DAYS): number => {
+  return WEEKDAY_MAP[day];
+};

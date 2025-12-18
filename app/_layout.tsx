@@ -1,5 +1,6 @@
 import LoadingScreen from "@/components/Loading";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
+import { setupNotificationChannel } from "@/hook/notificationChannel";
 import { toastConfig } from "@/utils/toastConfig";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -10,6 +11,7 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
+import * as Notifications from "expo-notifications";
 
 const queryClient = new QueryClient();
 
@@ -75,6 +77,19 @@ export default function RootLayout() {
       await setVisibilityAsync("hidden");
     })();
   }, [fontsLoaded]);
+  //set noti hiển thị khi app đang mở
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowBanner: true,
+      shouldShowList: true,
+      shouldPlaySound: true,
+      shouldSetBadge: false,
+    }),
+  });
+  //set notification channel
+  useEffect(() => {
+    setupNotificationChannel();
+  }, []);
 
   if (!fontsLoaded) return null;
 
