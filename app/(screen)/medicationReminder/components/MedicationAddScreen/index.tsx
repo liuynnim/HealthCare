@@ -4,6 +4,7 @@ import ScheduleCard from "@/components/Medication/ScheduleCard";
 import {
   FREQUENCY,
   FREQUENCY_OPTIONS,
+  UNIT_DISPLAY,
   UNIT_OPTIONS,
   WEEK_DAYS_DISPLAY,
 } from "@/constants/medication";
@@ -16,7 +17,11 @@ import { Colors } from "@/styles/Common";
 import { Ionicons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Picker } from "@react-native-picker/picker";
-import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
@@ -36,6 +41,8 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CheckBoxDaysModal from "../../../../../components/Medication/CheckBoxDaysModal";
 import styles from "../../../../../styles/medicationReminder/MedicationAddScreen/styles";
+import { notify } from "@/utils/notify";
+import { NotifyTypeEnum } from "@/constants/notify";
 
 export default function MedicationAddScreen() {
   const [isStartDatePickerVisible, setStartDatePickerVisible] =
@@ -45,7 +52,7 @@ export default function MedicationAddScreen() {
   const [showWeekModal, setShowWeekModal] = useState<boolean>(false);
   const [addTimeVisible, setAddTimeVisible] = useState<boolean>(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
-
+  const queryClient = useQueryClient();
   /* ********** handle get drug list ********** */
   const [open, setOpen] = useState(false);
   const [keyword, setKeyword] = useState("");
@@ -71,7 +78,7 @@ export default function MedicationAddScreen() {
   } = useForm({
     resolver: zodResolver(medicationSchema),
     defaultValues: {
-      drugName: "",
+      drug_name: "",
       unit_id: 1,
       start_date: new Date(),
       note: "",
@@ -88,8 +95,11 @@ export default function MedicationAddScreen() {
 
   const addMedication = useMutation({
     mutationFn: (data: any) => postSingleDrug(data),
-    onSuccess: (data) => {
-      console.log(data);
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["prescriptions"],
+      });
+      notify("Tạo lịch uống thuốc thành công!", NotifyTypeEnum.SUCCESS);
       router.back();
     },
     onError: (error) => {
@@ -104,6 +114,7 @@ export default function MedicationAddScreen() {
       end_date: endDate ? dayjs(data.endDate).format("YYYY-MM-DD") : null,
       interval_days: data.interval_days ? data.interval_days : null,
     };
+    console.log(payload);
     addMedication.mutate(payload);
   };
   const handleDeleteSchedule = (index: number) => {
@@ -136,7 +147,7 @@ export default function MedicationAddScreen() {
             </Text>
             <Controller
               control={control}
-              name="drugName"
+              name="drug_name"
               render={({ field: { onChange, value } }) => {
                 const drugPages = data?.pages ?? [];
                 const drugItems = drugPages.flatMap((p: any) => p.content);
@@ -220,17 +231,17 @@ export default function MedicationAddScreen() {
                       </View>
                     </Modal>
 
-                    {errors.drugName && (
+                    {errors.drug_name && (
                       <Text style={styles.errorText}>
-                        {errors.drugName.message}
+                        {errors.drug_name.message}
                       </Text>
                     )}
                   </View>
                 );
               }}
             />
-            {errors.drugName && (
-              <Text style={styles.errorText}>{errors.drugName.message}</Text>
+            {errors.drug_name && (
+              <Text style={styles.errorText}>{errors.drug_name.message}</Text>
             )}
           </View>
 
@@ -418,9 +429,9 @@ export default function MedicationAddScreen() {
               ? schedules.map((s, index) => (
                   <ScheduleCard
                     key={index}
-                    name={getValues("drugName")}
+                    name={getValues("drug_name")}
                     time={s.time}
-                    unit={watch("unit_id")}
+                    unit={UNIT_DISPLAY[watch("unit_id")]}
                     dosage={s.dosage}
                     mode="edit"
                     onPress={() => {

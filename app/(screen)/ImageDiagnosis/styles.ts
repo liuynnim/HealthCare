@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     height: 55,
     borderRadius: 15,
     overflow: "hidden",
-    shadowColor: Colors.glow,
+    shadowColor: Colors.accent_blue,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.5,
     shadowRadius: 10,

@@ -46,14 +46,14 @@ const styles = StyleSheet.create({
   dayScroll: {
     width: "100%",
     marginBottom: 14,
-    maxHeight: 66
+    maxHeight: 66,
   },
 
   dayItem: {
-    height:60,
-    width: 60,
-    paddingVertical: 4,
-    paddingHorizontal: 4,
+    height: 60,
+    width: 62,
+    paddingVertical: 1,
+    paddingHorizontal: "auto",
     alignItems: "center",
     borderRadius: 14,
     marginRight: 10,
@@ -119,6 +119,19 @@ const styles = StyleSheet.create({
 
   listContent: {
     paddingBottom: 32,
+  },
+
+  placeholderContainer: {
+    alignItems: "center",
+    marginTop: 60,
+    opacity: 0.8,
+  },
+  placeholderText: {
+    color: Colors.text_primary,
+    fontSize: 16,
+    textAlign: "center",
+    marginTop: 12,
+    lineHeight: 22,
   },
 });
 

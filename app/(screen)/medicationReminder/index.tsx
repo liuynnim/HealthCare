@@ -4,7 +4,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import { Linking, Pressable, ScrollView, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Linking,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "../../../styles/medicationReminder/styles";
@@ -16,6 +23,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { useQuery } from "@tanstack/react-query";
 import { MedicationSchedule } from "@/app/types/medication";
 import { syncMedicationNotifications } from "@/hook/notification/notificationService";
+import LoadingScreen from "@/components/Loading";
 
 const generateDays = (centerDate: Dayjs, range: number) => {
   return Array.from({ length: range }, (_, i) => {
@@ -203,7 +211,7 @@ export default function MedicationReminderScreen() {
             showsVerticalScrollIndicator={false}
           >
             {isLoading ? (
-              <Text>Đang tải...</Text>
+              <LoadingScreen />
             ) : medicineList.length > 0 ? (
               medicineList.map((item) => (
                 <ScheduleCard
@@ -216,7 +224,9 @@ export default function MedicationReminderScreen() {
                 />
               ))
             ) : (
-              <Text>Không có lịch uống thuốc cho ngày này</Text>
+              <Text style={styles.placeholderText}>
+                Không có lịch uống thuốc cho ngày này
+              </Text>
             )}
           </ScrollView>
         </View>

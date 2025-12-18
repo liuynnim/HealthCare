@@ -1,4 +1,4 @@
-import { Colors, Fonts, FontSizes } from "@/styles/Common";
+import { Colors, Fonts, FontSizes, Typography } from "@/styles/Common";
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
@@ -30,15 +30,11 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     height: 50,
     paddingHorizontal: 16,
-    fontFamily: Fonts.regular,
-    fontSize: FontSizes.medium,
-    color: Colors.text_primary,
+    ...Typography.bodyMedium,
   },
 
   label: {
-    fontFamily: Fonts.medium,
-    fontSize: FontSizes.medium,
-    color: Colors.text_secondary,
+    ...Typography.label,
     marginBottom: 6,
   },
 
@@ -49,16 +45,15 @@ const styles = StyleSheet.create({
   },
 
   textPicker: {
-    color: "#000",
-    fontFamily: Fonts.regular,
-    fontSize: FontSizes.medium,
+    ...Typography.bodyMedium,
+    color: Colors.text_primary,
   },
 
   errorText: {
     marginTop: 4,
-    color: "#FF4D4F",
-    fontSize: FontSizes.small,
     fontFamily: Fonts.regular,
+    fontSize: FontSizes.small,
+    color: Colors.accent_red,
   },
 
   /* Select Box */
@@ -97,15 +92,12 @@ const styles = StyleSheet.create({
   },
 
   modalItemLabel: {
-    color: Colors.text_primary,
-    fontFamily: Fonts.medium,
-    fontSize: FontSizes.medium,
+    ...Typography.bodyMedium,
   },
 
   modalItemSubLabel: {
+    ...Typography.body,
     color: Colors.text_secondary,
-    fontFamily: Fonts.regular,
-    fontSize: FontSizes.small,
     marginTop: 2,
   },
 
@@ -160,10 +152,8 @@ const styles = StyleSheet.create({
   },
 
   saveText: {
+    ...Typography.bodyMedium,
     color: "#FFF",
-    fontSize: FontSizes.medium,
-    fontFamily: Fonts.medium,
-    width: "100%",
     textAlign: "center",
   },
 });

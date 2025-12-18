@@ -60,7 +60,6 @@ const getHour = (time: string): [number, number] => {
 const createNotificationContent = (schedule: MedicationSchedule) => {
   const unit = schedule.unitName ?? "";
   const note = schedule.note ? `\nGhi chú: ${schedule.note}` : "";
-
   return `Bạn cần uống ${schedule.dosage} ${unit} ${schedule.drugName}${note}`;
 };
 const secondsUntilNextTime = (hour: number, minute: number) => {

@@ -13,7 +13,9 @@ export const Colors = {
   border: "#1F2937", // viền xám đậm
 };
 
-export const getGradientByPercent = (percent: number): readonly [string, string] => {
+export const getGradientByPercent = (
+  percent: number
+): readonly [string, string] => {
   if (percent < 0.3) return ["#EF4444", "#F97316"] as const; // đỏ → cam
 
   if (percent < 0.6) return ["#F97316", "#FACC15"] as const; // cam → vàng
@@ -27,6 +29,29 @@ export const Fonts = {
   regular: "Roboto-Condensed-Regular",
   medium: "Roboto-Condensed-Medium",
   bold: "Roboto-Condensed-Bold",
+};
+
+export const Typography = {
+  body: {
+    fontFamily: Fonts.regular,
+    fontSize: 14,
+    color: Colors.text_primary,
+  },
+  bodyMedium: {
+    fontFamily: Fonts.medium,
+    fontSize: 16,
+    color: Colors.text_primary,
+  },
+  label: {
+    fontFamily: Fonts.medium,
+    fontSize: 14,
+    color: Colors.text_secondary,
+  },
+  title: {
+    fontFamily: Fonts.bold,
+    fontSize: 24,
+    color: Colors.text_primary,
+  },
 };
 
 export const FontSizes = {

@@ -1,4 +1,3 @@
-import { UNIT_DISPLAY } from "@/constants/medication";
 import { Colors, Fonts, FontSizes } from "@/styles/Common";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";

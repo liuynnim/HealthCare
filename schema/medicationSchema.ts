@@ -13,7 +13,7 @@ export type ScheduleData = z.infer<typeof ScheduleSchema>;
 export const medicationSchema = z
   .object({
     drug_id: z.number().optional(),
-    drugName: z.string().min(1, "Hãy cung cấp tên thuốc"),
+    drug_name: z.string().min(1, "Hãy cung cấp tên thuốc"),
 
     unit_id: z.number(),
 
