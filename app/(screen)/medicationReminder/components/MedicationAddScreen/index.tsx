@@ -73,6 +73,7 @@ export default function MedicationAddScreen() {
     handleSubmit,
     setValue,
     getValues,
+    trigger,
     watch,
     formState: { errors },
   } = useForm({
@@ -230,12 +231,6 @@ export default function MedicationAddScreen() {
                         </View>
                       </View>
                     </Modal>
-
-                    {errors.drug_name && (
-                      <Text style={styles.errorText}>
-                        {errors.drug_name.message}
-                      </Text>
-                    )}
                   </View>
                 );
               }}
@@ -512,6 +507,7 @@ export default function MedicationAddScreen() {
         visible={addTimeVisible}
         setVisible={setAddTimeVisible}
         schedules={schedules}
+        trigger={trigger}
         unit={watch("unit_id")}
         setValue={setValue}
         editingIndex={editingIndex}

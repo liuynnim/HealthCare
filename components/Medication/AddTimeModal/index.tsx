@@ -1,10 +1,10 @@
 import { UNIT_DISPLAY } from "@/constants/medication";
 import { AddReminderMedicationForm } from "@/schema/medicationSchema";
-import { Colors, Fonts, FontSizes } from "@/styles/Common";
+import { Colors, Typography } from "@/styles/Common";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { UseFormSetValue } from "react-hook-form";
+import { UseFormSetValue, UseFormTrigger } from "react-hook-form";
 import {
   Modal,
   View,
@@ -19,6 +19,7 @@ type Props = {
   visible: boolean;
   setVisible: Dispatch<SetStateAction<boolean>>;
   setValue: UseFormSetValue<AddReminderMedicationForm>;
+  trigger: UseFormTrigger<AddReminderMedicationForm>;
   schedules: { time: string; dosage: number }[];
   editingIndex: number | null;
   unit: number;
@@ -29,6 +30,7 @@ export default function AddTimeModal({
   setVisible,
   schedules,
   setValue,
+  trigger,
   editingIndex,
   unit,
 }: Props) {
@@ -37,6 +39,7 @@ export default function AddTimeModal({
 
   const [time, setTime] = useState("08:00");
   const [dosage, setDosage] = useState("1");
+  const [error, setError] = useState("");
 
   /** Load data khi edit */
   useEffect(() => {
@@ -44,25 +47,57 @@ export default function AddTimeModal({
       setTime(schedules[editingIndex].time);
       setDosage(String(schedules[editingIndex].dosage));
     }
-  }, [editingIndex, schedules]);
+  }, [editingIndex, schedules, isEditing]);
 
   const close = () => {
     setVisible(false);
-    setTime("08:00");
-    setDosage("1");
+
+    if (!isEditing) {
+      setTime("08:00");
+      setDosage("1");
+    }
   };
 
+  // validate liều lượng
+  useEffect(() => {
+    if (Number(dosage) < 1) {
+      setError("Liều lượng phải lớn hơn 0");
+    } else {
+      setError("");
+    }
+  }, [dosage]);
+
   const handleSave = () => {
+    // 1. validate liều lượng
+    if (error) return;
+
     const updated = Array.isArray(schedules) ? [...schedules] : [];
     const item = { time, dosage: Number(dosage) };
 
+    // 2. tìm index trùng giờ (trừ chính nó khi edit)
+    const duplicateIndex = updated.findIndex(
+      (s, index) => s.time === time && (!isEditing || index !== editingIndex)
+    );
+
+    // 3. nếu trùng giờ → ghi đè
+    if (duplicateIndex !== -1) {
+      updated[duplicateIndex] = item;
+      setValue("schedules", updated);
+      close();
+      return;
+    }
+
+    // 4. edit bình thường
     if (isEditing && editingIndex !== null) {
       updated[editingIndex] = item;
     } else {
+      // 5. add mới
       updated.push(item);
     }
 
-    setValue("schedules", updated);
+    setValue("schedules", updated, { shouldValidate: true });
+    trigger("schedules");
+
     close();
   };
 
@@ -85,7 +120,12 @@ export default function AddTimeModal({
           </Pressable>
 
           {/* ===== DOSAGE ===== */}
-          <View style={styles.inputWrapper}>
+          <View
+            style={[
+              styles.inputWrapper,
+              error && { borderWidth: 1, borderColor: Colors.accent_red },
+            ]}
+          >
             <Ionicons
               name="medkit-outline"
               size={20}
@@ -101,7 +141,7 @@ export default function AddTimeModal({
             />
             <Text style={styles.unit}>{UNIT_DISPLAY[unit]}</Text>
           </View>
-
+          {error ? <Text style={styles.errorText}>{error}</Text> : null}
           {/* ===== ACTIONS ===== */}
           <View style={styles.actions}>
             <Pressable onPress={close}>
@@ -128,6 +168,7 @@ export default function AddTimeModal({
       <DateTimePickerModal
         isVisible={timePickerVisible}
         mode="time"
+        display="spinner"
         onConfirm={(d) => {
           const hh = String(d.getHours()).padStart(2, "0");
           const mm = String(d.getMinutes()).padStart(2, "0");
@@ -158,9 +199,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontFamily: Fonts.bold,
-    fontSize: FontSizes.large,
-    color: Colors.text_primary,
+    ...Typography.title,
     marginBottom: 16,
   },
 
@@ -176,9 +215,7 @@ const styles = StyleSheet.create({
   },
 
   timeText: {
-    fontFamily: Fonts.medium,
-    fontSize: 18,
-    color: Colors.text_primary,
+    ...Typography.bodyMedium,
   },
 
   /* Dosage */
@@ -195,14 +232,17 @@ const styles = StyleSheet.create({
 
   input: {
     flex: 1,
-    color: Colors.text_primary,
-    fontFamily: Fonts.regular,
-    fontSize: FontSizes.medium,
+    ...Typography.body,
   },
 
   unit: {
-    color: Colors.text_secondary,
-    fontSize: FontSizes.small,
+    ...Typography.label,
+  },
+
+  errorText: {
+    marginTop: -10,
+    ...Typography.body,
+    color: Colors.accent_red,
   },
 
   /* Actions */
@@ -213,9 +253,8 @@ const styles = StyleSheet.create({
   },
 
   cancelText: {
+    ...Typography.body,
     color: Colors.text_secondary,
-    fontSize: FontSizes.medium,
-    fontFamily: Fonts.regular,
   },
 
   saveBtn: {
@@ -225,8 +264,7 @@ const styles = StyleSheet.create({
   },
 
   saveText: {
+    ...Typography.bodyMedium,
     color: "#FFF",
-    fontSize: FontSizes.medium,
-    fontFamily: Fonts.medium,
   },
 });
