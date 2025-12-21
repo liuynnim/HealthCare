@@ -5,7 +5,7 @@ import { toastConfig } from "@/utils/toastConfig";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
-import { setVisibilityAsync } from "expo-navigation-bar";
+import * as NavigationBar from "expo-navigation-bar";
 import { SplashScreen, Stack, router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
@@ -27,6 +27,10 @@ const RootNavigator = () => {
 
   return (
     <Stack>
+      <Stack.Screen
+        name="/"
+        options={{ headerShown: false }}
+      />
       <Stack.Screen
         name="(screen)/login/index"
         options={{ headerShown: false }}
@@ -72,9 +76,14 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    if (fontsLoaded) SplashScreen.hideAsync();
+    if (!fontsLoaded) return;
+
+    SplashScreen.hideAsync();
+
     (async () => {
-      await setVisibilityAsync("hidden");
+      await NavigationBar.setVisibilityAsync("hidden");
+
+      await NavigationBar.setBehaviorAsync("overlay-swipe");
     })();
   }, [fontsLoaded]);
   //set noti hiển thị khi app đang mở

@@ -4,13 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import {
-  Linking,
-  Pressable,
-  ScrollView,
-  Text,
-  View,
-} from "react-native";
+import { Linking, Pressable, ScrollView, Text, View } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "../../../styles/medicationReminder/styles";
@@ -80,9 +74,7 @@ export default function MedicationReminderScreen() {
   const medicineList: MedicationSchedule[] = data ?? [];
 
   useEffect(() => {
-    if (medicineList?.length) {
-      syncMedicationNotifications(medicineList);
-    }
+    syncMedicationNotifications(medicineList);
   }, [medicineList]);
 
   if (status === "denied") {

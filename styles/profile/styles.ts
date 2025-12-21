@@ -69,12 +69,31 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 
-  editText: {
-    color: Colors.primary_2,
-    fontSize: 16,
+  editBtn: {
     position: "absolute",
-    right: 16,
-    top: 16,
+    right: 12,
+    top: 26,
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderRadius: 20,
+    backgroundColor: "rgba(6,182,212,0.15)", // primary_2 overlay
+    borderWidth: 1,
+    borderColor: Colors.primary_2,
+  },
+
+  editBtnText: {
+    color: Colors.primary_2,
+    fontSize: 14,
+    fontWeight: "600",
+  },
+
+  selectWrapper: {
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.primary_2,
+  },
+
+  select: {
+    color: Colors.text_primary,
   },
 
   input: {
@@ -91,6 +110,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     overflow: "hidden",
     marginTop: 20,
+    marginHorizontal: "auto"
   },
 
   logoutGradient: {

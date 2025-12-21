@@ -1,8 +1,7 @@
-import * as Notifications from "expo-notifications";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MedicationSchedule } from "@/app/types/medication";
 import { mapWeekDayToNumber } from "@/constants/medication";
-import { Platform } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Notifications from "expo-notifications";
 
 const STORAGE_KEY = {
   MEDICATION_NOTIFICATION_MAP: "MEDICATION_NOTIFICATION_MAP",
@@ -44,12 +43,6 @@ export const getNotificationsByScheduleId = async (
   return map[scheduleId] ?? [];
 };
 
-type ScheduleMedicationParams = {
-  scheduleId: number;
-  drugName: string;
-  time: string; // "08:00"
-};
-
 // hàm lấy giờ
 const getHour = (time: string): [number, number] => {
   const [hour, minute] = time.split(":").map(Number);
@@ -62,73 +55,21 @@ const createNotificationContent = (schedule: MedicationSchedule) => {
   const note = schedule.note ? `\nGhi chú: ${schedule.note}` : "";
   return `Bạn cần uống ${schedule.dosage} ${unit} ${schedule.drugName}${note}`;
 };
-const secondsUntilNextTime = (hour: number, minute: number) => {
-  const now = new Date();
-  const target = new Date();
-
-  target.setHours(hour, minute, 0, 0);
-
-  if (target <= now) {
-    target.setDate(target.getDate() + 1);
-  }
-
-  return Math.floor((target.getTime() - now.getTime()) / 1000);
-};
-
-const SECONDS_IN_WEEK = 7 * 24 * 60 * 60;
 // hàm tạo schedule nhắc hằng ngày
 const createDailySchedule = async (
-  schedule: MedicationSchedule
-): Promise<string[]> => {
-  const [hour, minute] = getHour(schedule.time);
-
-  // 🟢 iOS
-  if (Platform.OS === "ios") {
-    const id = await Notifications.scheduleNotificationAsync({
-      content: {
-        title: "Nhắc uống thuốc",
-        body: createNotificationContent(schedule),
-        data: { scheduleId: schedule.scheduleId },
-      },
-      trigger: {
-        type: Notifications.SchedulableTriggerInputTypes.CALENDAR,
-        hour,
-        minute,
-        repeats: true,
-      },
-    });
-
-    return [id];
-  }
-
-  // 🟡 Android
-  const seconds = secondsUntilNextTime(hour, minute);
-
-  const id = await Notifications.scheduleNotificationAsync({
-    content: {
-      title: "Nhắc uống thuốc",
-      body: createNotificationContent(schedule),
-      data: { scheduleId: schedule.scheduleId },
-    },
-    trigger: {
-      type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
-      seconds,
-      repeats: true, // Android OK với TIME_INTERVAL
-    },
-  });
-
-  return [id];
-};
-
-// hàm tạo schedule nhắc theo tuần
-const createWeeklySchedule = async (
-  schedule: MedicationSchedule
+  schedule: MedicationSchedule,
+  daysAhead = 30
 ): Promise<string[]> => {
   const [hour, minute] = getHour(schedule.time);
   const ids: string[] = [];
+  const now = new Date();
 
-  for (const day of schedule.daysOfWeek) {
-    const weekday = mapWeekDayToNumber(day);
+  for (let i = 0; i < daysAhead; i++) {
+    const date = new Date();
+    date.setDate(date.getDate() + i);
+    date.setHours(hour, minute, 0, 0);
+
+    if (date <= now) continue;
 
     const id = await Notifications.scheduleNotificationAsync({
       content: {
@@ -136,19 +77,62 @@ const createWeeklySchedule = async (
         body: createNotificationContent(schedule),
         data: {
           scheduleId: schedule.scheduleId,
-          weekday: day,
+          date: date.toISOString(),
         },
       },
       trigger: {
-        type: Notifications.SchedulableTriggerInputTypes.CALENDAR,
-        weekday,
-        hour,
-        minute,
-        repeats: true,
+        type: Notifications.SchedulableTriggerInputTypes.DATE,
+        date,
       },
     });
 
     ids.push(id);
+  }
+
+  return ids;
+};
+
+// hàm tạo schedule nhắc theo tuần
+const createWeeklySchedule = async (
+  schedule: MedicationSchedule,
+  weeksAhead = 8
+): Promise<string[]> => {
+  const [hour, minute] = getHour(schedule.time);
+  const ids: string[] = [];
+  const now = new Date();
+
+  for (const day of schedule.daysOfWeek) {
+    const targetWeekday = mapWeekDayToNumber(day); // 1–7 (Mon–Sun)
+
+    for (let w = 0; w < weeksAhead; w++) {
+      const date = new Date();
+      const currentWeekday = date.getDay() === 0 ? 7 : date.getDay();
+
+      const diff = ((targetWeekday - currentWeekday + 7) % 7) + w * 7;
+
+      date.setDate(date.getDate() + diff);
+      date.setHours(hour, minute, 0, 0);
+
+      if (date <= now) continue;
+
+      const id = await Notifications.scheduleNotificationAsync({
+        content: {
+          title: "Nhắc uống thuốc",
+          body: createNotificationContent(schedule),
+          data: {
+            scheduleId: schedule.scheduleId,
+            date: date.toISOString(),
+            weekday: day,
+          },
+        },
+        trigger: {
+          type: Notifications.SchedulableTriggerInputTypes.DATE,
+          date,
+        },
+      });
+
+      ids.push(id);
+    }
   }
 
   return ids;
@@ -177,7 +161,7 @@ const createEveryXDaySchedule = async (
     const date = addDays(startDate, offset);
     date.setHours(hour, minute, 0, 0);
 
-    if (date.getTime() <= Date.now()) continue;
+    if (date <= new Date()) continue;
 
     const id = await Notifications.scheduleNotificationAsync({
       content: {
@@ -189,12 +173,8 @@ const createEveryXDaySchedule = async (
         },
       },
       trigger: {
-        type: Notifications.SchedulableTriggerInputTypes.CALENDAR,
-        year: date.getFullYear(),
-        month: date.getMonth() + 1,
-        day: date.getDate(),
-        hour,
-        minute,
+        type: Notifications.SchedulableTriggerInputTypes.DATE,
+        date,
       },
     });
 

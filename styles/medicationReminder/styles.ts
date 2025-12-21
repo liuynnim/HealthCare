@@ -15,8 +15,8 @@ const styles = StyleSheet.create({
 
   circleTop: {
     position: "absolute",
-    top: -60,
-    right: -80,
+    top: 200,
+    right: -250,
     width: 320,
     height: 320,
     borderRadius: 320,
@@ -26,8 +26,8 @@ const styles = StyleSheet.create({
 
   circleBottom: {
     position: "absolute",
-    bottom: -200,
-    left: -90,
+    top: 250,
+    left: -220,
     width: 300,
     height: 300,
     borderRadius: 300,

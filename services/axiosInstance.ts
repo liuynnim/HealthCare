@@ -1,9 +1,9 @@
-import { PUBLIC_URL, AI_URL } from "@env";
+import { getToken } from "@/utils/auth";
+import { AI_URL, CALORI_URL, PUBLIC_URL } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios, { AxiosError, AxiosInstance } from "axios";
 import { router } from "expo-router";
 import { STORAGE_KEY } from "../constants/common";
-import { getToken } from "@/utils/auth";
 
 export async function postRefresh(refreshToken: string) {
   const res = await axios.post(`${PUBLIC_URL}api/auth/refresh`, {
@@ -57,10 +57,7 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
-      console.log(
-        "🚀 ~ request:",
-        JSON.stringify(config, null, 2)
-      );
+      console.log("🚀 ~ request:", JSON.stringify(config, null, 2));
       return config;
     },
     (error: AxiosError) => {
@@ -71,10 +68,7 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
 
   instance.interceptors.response.use(
     (response) => {
-      console.log(
-        "✅ ~ response:",
-        JSON.stringify(response.data, null, 2)
-      );
+      console.log("✅ ~ response:", JSON.stringify(response.data, null, 2));
       return response;
     },
     async (error) => {
@@ -138,5 +132,5 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
 
 const axiosInstance = createAxiosInstance(`${PUBLIC_URL}api`);
 export const axiosInstanceAI = createAxiosInstance(`${AI_URL}`);
-console.log("📡 BASE_URL:", axiosInstance.defaults.baseURL);
+export const axiosInstanceCalori = createAxiosInstance(`${CALORI_URL}`);
 export default axiosInstance;
